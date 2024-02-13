@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+const { scrape: scrapeSchedule } = require('../scrapers/schedule');
+
+console.log("[Schedule] start")
+scrapeSchedule();
+console.log("[Schedule] done")
