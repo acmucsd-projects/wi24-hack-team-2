@@ -5,12 +5,12 @@ const meetingSchema = new mongoose.Schema(
     type: {
       type: String,
       required: true,
-      enum: ["LE", "DI", "SE", "IN", "LA", "FI"], // More of these exist I'm sure
+      // enum: ["LE", "DI", "SE", "IN", "LA", "MI", "FI"], // More of these exist I'm sure
     },
     days: [
       {
         type: String,
-        enum: ["M", "Tu", "W", "Th", "F", "Sa", "Su"],
+        // enum: ["M", "Tu", "W", "Th", "F", "Sa", "Su"],
       },
     ],
     date: {
@@ -38,7 +38,7 @@ const sectionSchema = new mongoose.Schema(
       unique: true,
     },
     meetings: {
-      type: [[meetingSchema]],
+      type: [meetingSchema],
     },
     instructor: {
       type: mongoose.Types.ObjectId,
