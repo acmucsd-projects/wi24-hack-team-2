@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 //get all schedules
 const getAllSchedules = async (req, res) => {
     const schedules = await Schedule.find({}).sort({})
-    res.status(200).json(workouts)
+    res.status(200).json(schedules)
 }
 
 //get one schedule

@@ -5,7 +5,7 @@ const {
     getSchedule, 
     deleteSchedule, 
     updateSchedule
-} = require('../controllers/scheduleControllers')
+} = require('../controllers/scheduleController')
 
 const router = express.Router()
 
