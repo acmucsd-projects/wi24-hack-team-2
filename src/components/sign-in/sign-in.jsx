@@ -6,7 +6,7 @@ export default function SignIn() {
         <main>
             <body>
         <div>
-            <h1>sign up</h1>
+            <h1>sign up now</h1>
         </div>
 
         <div>
