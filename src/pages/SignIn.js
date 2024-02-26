@@ -1,4 +1,4 @@
-
+import React from 'react';
 import '../App.css';
 import SignInPage from '../components/sign-in/sign-in';
 
