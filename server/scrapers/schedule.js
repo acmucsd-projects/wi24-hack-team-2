@@ -1,11 +1,56 @@
 const Course = require("../models/course");
+const Instructor = require("../models/instructor");
 const fs = require("fs");
 const jsdom = require("jsdom");
 
-function scrape() {
+async function scrape() {
   const html = fs.readFileSync("scrapers/schedules.html").toString();
 
-  parseHTML(html);
+  const courses = parseHTML(html);
+
+  await saveCourses(courses);
+}
+
+async function saveCourses(courses) {
+  for (const course of courses) {
+    let data = course;
+
+    for (let i = 0; i < data.sections.length; i++) {
+      if (!data.sections[i].instructors) {
+        data.sections[i].instructors = [];
+      }
+      data.sections[i].instructors = (
+        await Promise.all(
+          data.sections[i].instructors.map(async (instructor) => {
+            if (["", "Staff", undefined, null].includes(instructor)) {
+              return undefined;
+            } else {
+              return await findOrCreateInstructor(instructor);
+            }
+          })
+        )
+      ).filter((x) => x);
+    }
+
+    const doc = new Course(data);
+
+    await doc.save();
+  }
+}
+
+async function findOrCreateInstructor(name) {
+  const query = await Instructor.find({ name });
+
+  let instructor;
+  if (query.length >= 1) {
+    instructor = query[0];
+  } else {
+    console.log("creating instructor", name);
+    instructor = new Instructor({ name, courses: [] });
+    await instructor.save();
+  }
+
+  return instructor._id;
 }
 
 function parseHTML(html) {
@@ -41,6 +86,9 @@ function parseHTML(html) {
         .split("(")[1]
         ?.split("Units")[0]
         .trim();
+      if (isNaN(units)) {
+        units = undefined; // TODO: deal with this
+      }
     }
 
     if (
@@ -56,71 +104,126 @@ function parseHTML(html) {
       const section = row.children[3]?.textContent.trim();
       const date = Date.parse(section);
 
+      const time = row.children[5]?.textContent.trim();
+      const [startTime, endTime] = time?.includes("-")
+        ? time.split("-")
+        : [time, undefined];
+
+      const instructors = row.children[8]?.childNodes
+        ? Array.from(row.children[8]?.childNodes)
+            .map((node) => node.textContent?.trim())
+            .filter((text) => text !== "")
+        : [];
+
       courses.get(code).push({
         units: units,
         type: row.querySelector("#insTyp")?.textContent.trim(),
         section: isNaN(date) ? section : undefined,
         date: isNaN(date) ? undefined : section,
         days: row.children[4]?.textContent.trim(),
-        time: row.children[5]?.textContent.trim(),
+        startTime,
+        endTime,
         location: `${row.children[6]?.textContent?.trim()} ${row.children[7]?.textContent?.trim()}`,
-        instructor: row.children[8]?.textContent?.trim(),
+        instructors,
       });
     }
   }
 
-  courses.forEach((v, k) => console.log(k, v.length));
+  return Array.from(courses).map(([code, c]) => {
+    let sections = [];
+    let currentSections = [];
+    let currentLectureInfo = {};
+    let currentFirstLetter;
+    let sharedMeetings = [];
+    let units;
+    for (const row of c) {
+      if (row.type == "LE") {
+        if (
+          currentFirstLetter !== undefined &&
+          row.section[0] !== currentFirstLetter
+        ) {
+          sections.push(
+            ...currentSections.map((section) => ({
+              ...currentLectureInfo,
+              ...section,
+              meetings: sharedMeetings.concat(section.meetings),
+            }))
+          );
+          currentSections = [];
+          sharedMeetings = [];
+        }
 
-  const c = courses.get("CHEM 7L");
-  let sections = [];
-  let currentSections = [];
-  let currentFirstLetter;
-  let sharedMeetings = [];
-  for (const row of c) {
-    // if lecture
-    if (row.type == "LE") {
-      console.log("Lecture case");
-      if (currentFirstLetter !== undefined && row.section[0] !== currentFirstLetter) {
-        // console.log(sharedMeetings)
-        // console.log(currentSections)
-        sections.push(
-          ...currentSections.map((section) => ({
-            ...section,
-            meetings: sharedMeetings.concat(section.meetings),
-          }))
-        );
-        currentSections = [];
-        sharedMeetings = [];
-        // add shared meetings to all current sections and move to sections
+        currentLectureInfo = {
+          instructors: row.instructors,
+        };
+        units = row.units;
+
+        sharedMeetings.push(rowToMeeting(row));
+      } else if (
+        row.section?.length === 3 &&
+        row.section.substr(row.section.length - 2) !== "00"
+      ) {
+        currentSections.push({
+          section: row.section,
+          meetings: [rowToMeeting(row)],
+        });
+        currentFirstLetter = row.section[0];
       } else {
-        // console.log("something weird happened");
+        sharedMeetings.push(rowToMeeting(row));
       }
-
-      sharedMeetings.push(row);
-      // else
-      // something weird happened
-    } else if (
-      row.section?.length === 3 &&
-      row.section.substr(row.section.length - 2) !== "00"
-    ) {
-      // console.log("Section case")
-      // if new section
-      // console.log(row);
-      currentSections.push({ meetings: [], ...row });
-      currentFirstLetter = row.section[0];
-    } else {
-      // console.log("Other case")
-
-      sharedMeetings.push(row);
     }
-    // if not new section (final, midterm, ...)
-    // add to shared meetings
-    // console.log(row.date);
-  }
 
-  console.log(sections);
+    sections.push(
+      ...currentSections.map((section) => ({
+        ...currentLectureInfo,
+        ...section,
+        meetings: sharedMeetings.concat(section.meetings),
+      }))
+    );
+    currentSections = [];
+    sharedMeetings = [];
+
+    return {
+      code,
+      units,
+      sections,
+    };
+  });
 
   // Second pass to actually get the right format
+}
+
+function rowToMeeting(row) {
+  return {
+    type: row.type,
+    date: row.date,
+    days: row.date ? undefined : parseDays(row.days),
+    startTime: row.startTime,
+    endTime: row.endTime,
+    location: row.location,
+  };
+}
+
+function parseDays(str) {
+  if (typeof str !== "string") {
+    return undefined;
+  }
+
+  const valid = ["M", "Tu", "W", "Th", "F", "S", "Su"];
+
+  const result = [];
+  let cur = "";
+
+  for (const c of str) {
+    cur += c;
+
+    if (valid.includes(cur)) {
+      result.push(cur);
+      cur = "";
+    }
+  }
+
+  return result;
 }
 
 module.exports = { scrape };

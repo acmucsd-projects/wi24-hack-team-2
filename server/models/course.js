@@ -4,13 +4,13 @@ const meetingSchema = new mongoose.Schema(
   {
     type: {
       type: String,
-      required: true,
+      // required: true,
       // enum: ["LE", "DI", "SE", "IN", "LA", "MI", "FI"], // More of these exist I'm sure
     },
     days: [
       {
         type: String,
-        // enum: ["M", "Tu", "W", "Th", "F", "Sa", "Su"],
+        enum: ["M", "Tu", "W", "Th", "F", "S", "Su"],
       },
     ],
     date: {
@@ -32,21 +32,17 @@ const meetingSchema = new mongoose.Schema(
 
 const sectionSchema = new mongoose.Schema(
   {
-    id: {
+    section: {
       type: String,
       required: true,
-      unique: true,
     },
     meetings: {
       type: [meetingSchema],
     },
-    instructor: {
-      type: mongoose.Types.ObjectId,
-      required: true,
-    },
+    instructors: [mongoose.Types.ObjectId],
     seats: {
       type: Number,
-      required: true,
+      required: false,
     },
   },
   { timestamps: true },
@@ -57,7 +53,9 @@ const courseSchema = new mongoose.Schema(
     code: {
       type: String,
       required: true,
-      unique: true,
+    },
+    units: {
+      type: Number,
     },
     sections: [sectionSchema],
   },

@@ -36,7 +36,7 @@ const courseSchema = new mongoose.Schema(
       type: SETSchema,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 // Just an idea for this
@@ -58,10 +58,9 @@ const instructorSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    courses: [courseSchema],
-    rmp: {},
+    courses: [mongoose.Types.ObjectId], // TODO: implement this on scraper side
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const Instructor = mongoose.model("Instructor", instructorSchema);
