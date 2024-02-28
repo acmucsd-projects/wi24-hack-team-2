@@ -2,16 +2,16 @@ const mongoose = require("mongoose");
 
 const capesEntryPart = new mongoose.Schema({
   avgGrade: {
-    type: String,
-    required: true,
-  },
-  recommendInstructor: {
     type: Number,
-    required: true,
   },
-  recommendClass: {
+  rcmndInstr: {
     type: Number,
-    required: true,
+  },
+  rcmndClass: {
+    type: Number,
+  },
+  studyHrs: {
+    type: Number,
   },
 });
 

@@ -17,7 +17,7 @@ async function main() {
 
   // await Course.deleteMany({});
   // console.log("Cleared courses collection");
-
+  //
   // console.log("[Schedule] start");
   // await scrapeSchedule();
   // console.log("[Schedule] done");
@@ -30,5 +30,3 @@ async function main() {
 }
 
 main();
-
-// This is broken and never stops so...
