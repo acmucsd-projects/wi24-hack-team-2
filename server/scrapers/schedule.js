@@ -12,6 +12,13 @@ async function scrape() {
 }
 
 async function saveCourses(courses) {
+  const instructorsToSave = new Map();
+  const coursesToSave = [];
+
+  const allInstructors = new Map(
+    (await Instructor.find({})).map((i) => [i.name, i]),
+  );
+
   for (const course of courses) {
     let data = course;
 
@@ -25,32 +32,35 @@ async function saveCourses(courses) {
             if (["", "Staff", undefined, null].includes(instructor)) {
               return undefined;
             } else {
-              return await findOrCreateInstructor(instructor);
+              if (allInstructors.has(instructor)) {
+                return allInstructors.get(instructor)._id;
+              } else if (instructorsToSave.has(instructor)) {
+                return instructorsToSave.get(instructor)._id;
+              } else {
+                const instructorDoc = new Instructor({
+                  name: instructor,
+                  courses: [],
+                });
+
+                instructorsToSave.set(instructor, instructorDoc);
+                return instructorDoc._id;
+              }
             }
-          })
+          }),
         )
       ).filter((x) => x);
     }
 
     const doc = new Course(data);
 
-    await doc.save();
-  }
-}
-
-async function findOrCreateInstructor(name) {
-  const query = await Instructor.find({ name });
-
-  let instructor;
-  if (query.length >= 1) {
-    instructor = query[0];
-  } else {
-    console.log("creating instructor", name);
-    instructor = new Instructor({ name, courses: [] });
-    await instructor.save();
+    coursesToSave.push(doc);
   }
 
-  return instructor._id;
+  console.log(
+    `[Schedule] Inserting ${instructorsToSave.size} instructors and ${coursesToSave.length} courses`,
+  );
+  await Instructor.insertMany(Array.from(instructorsToSave).map(([_, v]) => v));
+  await Course.insertMany(coursesToSave);
 }
 
 function parseHTML(html) {
@@ -111,8 +121,8 @@ function parseHTML(html) {
 
       const instructors = row.children[8]?.childNodes
         ? Array.from(row.children[8]?.childNodes)
-            .map((node) => node.textContent?.trim())
-            .filter((text) => text !== "")
+          .map((node) => node.textContent?.trim())
+          .filter((text) => text !== "")
         : [];
 
       courses.get(code).push({
@@ -147,7 +157,7 @@ function parseHTML(html) {
               ...currentLectureInfo,
               ...section,
               meetings: sharedMeetings.concat(section.meetings),
-            }))
+            })),
           );
           currentSections = [];
           sharedMeetings = [];
@@ -178,7 +188,7 @@ function parseHTML(html) {
         ...currentLectureInfo,
         ...section,
         meetings: sharedMeetings.concat(section.meetings),
-      }))
+      })),
     );
     currentSections = [];
     sharedMeetings = [];

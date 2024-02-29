@@ -1,36 +1,67 @@
 const jsdom = require("jsdom");
 const axios = require("axios").default;
+const cliProgress = require("cli-progress");
 const Instructor = require("../models/instructor");
+const { parseHTML: linkedomParse } = require("linkedom");
 
 async function scrape() {
-  const instructors = await Instructor.find({ capes: null });
+  const instructors = await Instructor.find({});
 
-  const promises = instructors.map((doc) => scrapeInstructor(doc));
-  await Promise.all(promises);
+  const bar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+  bar.start(instructors.length, 0);
+
+  const promises = instructors.map(
+    async (doc) => await scrapeInstructor(doc, bar),
+  );
+
+  const docsToUpdate = (await Promise.all(promises)).filter(
+    (doc) => doc !== undefined,
+  );
+
+  console.log(`[CAPEs] Updating ${docsToUpdate.filter.length} instructors`);
+
+  console.log(docsToUpdate);
+
+  await Instructor.bulkWrite(
+    docsToUpdate.map((doc) => ({
+      updateOne: {
+        filter: { _id: doc._id },
+        update: { $set: doc },
+        upsert: true,
+      },
+    })),
+  );
+
+  bar.stop();
 }
 
-async function scrapeInstructor(doc) {
+async function scrapeInstructor(doc, bar) {
   const name = doc.get("name");
 
-  console.log(`[CAPEs] Scraping CAPEs for ${name}`);
+  // console.log(`[CAPEs] Scraping CAPEs for ${name}`);
 
   try {
     const html = await getHTMLForInstructor(name);
     if (html.includes("No CAPEs")) {
-      console.log(`[CAPEs] No results found for ${name}`);
+      // console.log(`[CAPEs] No results found for ${name}`);
+      bar.increment();
       return;
     }
 
     const data = parseHTML(html);
     if (data === null) {
-      console.log(`[CAPEs] No results found for ${name}`);
+      // console.log(`[CAPEs] No results found for ${name}`);
+      bar.increment();
       return;
     }
 
     // console.log(data);
 
+    // console.log(`[CAPEs] Got CAPEs for ${name}`);
+
     doc.set("capes", data);
-    await doc.save();
+    bar.increment();
+    return doc;
   } catch (e) {
     if (e.message === "CAPEs cookie expired") {
       console.error(`[CAPEs] Cookie expired`);
@@ -40,8 +71,6 @@ async function scrapeInstructor(doc) {
     console.error(e);
     return; // TODO: make this quit all promises
   }
-
-  console.log(`[CAPEs] Updated CAPEs for ${name}`);
 }
 
 async function getHTMLForInstructor(name) {
@@ -60,12 +89,14 @@ async function getHTMLForInstructor(name) {
   return response.data;
 }
 
-function parseHTML(html) {
-  const dom = new jsdom.JSDOM(html);
-
-  const table = dom.window.document.querySelector(
-    "#ContentPlaceHolder1_gvCAPEs > tbody",
-  );
+async function parseHTML(html) {
+  // const dom = new jsdom.JSDOM(html);
+  //
+  // const table = dom.window.document.querySelector(
+  //   "#ContentPlaceHolder1_gvCAPEs > tbody",
+  // );
+  const { document } = linkedomParse(html);
+  const table = document.querySelector("#ContentPlaceHolder1_gvCAPEs > tbody");
 
   const courses = new Map();
 
