@@ -1,4 +1,5 @@
 import './sign-in.css';
+import { Link } from 'react-router-dom'
 
 
 export default function SignIn() {
@@ -25,7 +26,9 @@ export default function SignIn() {
                     </div>
 
                     <div>
-                        <input type="button" class="input-button" value="next"/>
+                        <Link to="/home">
+                            <input type="button" class="input-button" value="next"/>
+                        </Link>
                     </div>
                 </div>
             </body>
