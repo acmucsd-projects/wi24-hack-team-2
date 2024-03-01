@@ -1,0 +1,64 @@
+h1{
+    font-size: 3.5rem;
+    margin: 0rem 0rem;
+    color: #1d2348;
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 2.2;
+    text-align: center;
+    text-transform: lowercase;
+    letter-spacing: 0.1rem;
+    font-family: 'Karla', sans-serif;
+    margin-top: 10;
+    background-color: #EEE9E6;
+}
+
+h2{
+    font-size: 2.5rem;
+    margin: 2rem 0;
+    color: #2d7a88;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 1.2;
+    text-align: left;
+    text-transform: lowercase;
+    letter-spacing: 0.1rem;
+    font-family: 'Karla', sans-serif;
+    margin-left: 130px;
+}
+
+table{
+    background-color: #EEE9E6;
+    font-family: 'Karla', sans-serif;
+    font-size: 1.3rem;
+    border: 1px solid rgba(152, 170, 172, 0.25);
+    border-collapse: collapse;
+    width: 85%;
+    overflow-x: auto;
+    overflow-y: auto;
+    display: block;
+    white-space: break-spaces;
+    margin-bottom: 30px;
+    margin-top: 30px;
+
+}
+
+th{
+    color: #98AAAC;
+    font-weight: 400;
+    font-size: 15px;
+    padding: 5px;
+    height: 25px;
+    text-align: center;
+    border: 1px solid rgba(152, 170, 172, 0.25);
+}
+
+td{
+    color: #98AAAC;
+    font-weight: 400;
+    font-size: 15px;
+    font-family: Karla;
+    font-style: normal;
+    padding: 5px;
+    text-align: right;
+}

@@ -12,7 +12,7 @@ const App = () => {
     //put java script code here
   return (
     //put html code here
-    <div className="app">
+    <div className="App">
       <h1>Preferences</h1>
       <Classes />
       <ClassTimes />
