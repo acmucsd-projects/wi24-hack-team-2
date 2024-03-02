@@ -1,5 +1,5 @@
 import React from 'react';
-import './components.css';
+import './home.css';
 //put css in a css file and import
 const Classes = () => {
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import '../components/home/components.css';
+import '../components/home/home.css';
 import ClassTimes from '../components/home/ClassTimes';
 import Classes from '../components/home/Classes';
 import Update from '../components/home/Update';
