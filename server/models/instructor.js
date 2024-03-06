@@ -1,54 +1,23 @@
 const mongoose = require("mongoose");
 
-const CAPESchema = new mongoose.Schema({
+const capesEntryPart = new mongoose.Schema({
   avgGrade: {
-    type: String,
-    required: true,
-  },
-  recommendInstructor: {
     type: Number,
-    required: true,
   },
-  recommendClass: {
+  rcmndInstr: {
     type: Number,
-    required: true,
+  },
+  rcmndClass: {
+    type: Number,
+  },
+  studyHrs: {
+    type: Number,
   },
 });
 
-const SETSchema = new mongoose.Schema({
-  // I have no idea what SET gives us
-});
-
-const courseSchema = new mongoose.Schema(
-  {
-    code: {
-      type: String,
-      required: true,
-    },
-    term: {
-      type: String,
-      required: true,
-    },
-    CAPE: {
-      type: CAPESchema,
-    },
-    SET: {
-      type: SETSchema,
-    },
-  },
-  { timestamps: true },
-);
-
-// Just an idea for this
-const rmpSchema = new mongoose.Schema({
-  score: {
-    type: Number,
-    required: true,
-  },
-  ratings: {
-    type: Number,
-    required: true,
-  },
+const capesEntrySchema = new mongoose.Schema({
+  shortTerm: capesEntryPart,
+  longTerm: capesEntryPart,
 });
 
 const instructorSchema = new mongoose.Schema(
@@ -58,8 +27,16 @@ const instructorSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    courses: [courseSchema],
-    rmp: {},
+    courses: [mongoose.Types.ObjectId], // TODO: implement this on scraper side
+    capes: new mongoose.Schema({
+      courses: {
+        type: Map,
+        of: capesEntrySchema,
+      },
+      overall: {
+        type: capesEntrySchema,
+      },
+    }),
   },
   { timestamps: true },
 );
