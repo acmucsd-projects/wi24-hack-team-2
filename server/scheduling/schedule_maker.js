@@ -32,12 +32,6 @@ async function findAllNonCollidingSchedules(courseCodes) {
     return formattedSchedules;
 }
 
-// Example usage
-const courseCodes = ['CS101', 'MATH202', 'HIST303']; // Example course codes
-findAllNonCollidingSchedules(courseCodes).then(schedules => {
-    console.log('Possible schedules:', schedules);
-});
-
 const doSectionsCollide = (section1, section2) => {
     for (const meeting1 of section1.meetings) {
         for (const meeting2 of section2.meetings) {
@@ -66,8 +60,9 @@ const parseTime = (timeString) => {
     return hours * 60 + minutes; // Convert time to minutes for easier comparison
 };
 
-// Example usage:
-const currentEnrolledSections = [/* ... array of section objects the user is already enrolled in ... */];
-const newCourse = {/* ... course object with sections ... */};
 
-const availableSections = findNonCollidingSections(currentEnrolledSections, newCourse);
+// Example usage
+const courseCodes = ['CS101', 'MATH202', 'HIST303']; // Example course codes
+findAllNonCollidingSchedules(courseCodes).then(schedules => {
+    console.log('Possible schedules:', schedules);
+});
