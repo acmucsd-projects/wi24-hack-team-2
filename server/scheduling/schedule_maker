@@ -1,3 +1,13 @@
+const { MongoClient } = require("mongodb");
+const client = new MongoClient(process.env.DB_URL);
+const test_course_list = ["CSE 12", "CSE 15L", "WCWP 10A"];
+
+const check_course_validity = (course_list) => {
+    for (const course of course_list) {
+        if (client.test.courses.find(course))
+    }
+}
+
 const findNonCollidingSections = (currentEnrolledSections, newCourse) => {
     const nonCollidingSections = [];
 
