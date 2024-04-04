@@ -1,0 +1,48 @@
+.schedule {
+    font-family: "Karla", sans-serif; /* Set font-family for the table */
+    margin-left: 150px; /* Add margin to the left */
+    margin-right: 150px; /* Add margin to the right */
+    margin-bottom: 150px; /* Add margin to the bottom */
+    position: relative; /* Set position to relative */
+  }
+  
+  .schedule::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 100%;
+    height: 1px;
+    background-color: #EEE9E6; /* Set background color for the line */
+  }
+  
+  .schedule table {
+    width: 100%;
+    border-collapse: collapse; /* Collapse borders */
+  }
+  
+  .schedule th, .schedule td {
+    border: 1px solid #ddd; /* Add borders to cells */
+    padding: 4px; /* Add padding to cells */
+  }
+  
+  .schedule th {
+    background-color: #f2f2f2; /* Light gray background for header */
+  }
+  
+  .schedule th, .schedule td {
+    text-align: center; /* Center align text */
+  }
+  
+  .schedule th:first-child, .schedule td:first-child {
+    border-left: none; /* Remove left border for first column */
+  }
+  
+  .schedule th:last-child, .schedule td:last-child {
+    border-right: none; /* Remove right border for last column */
+  }
+  
+  .schedule tr:last-child th, .schedule tr:last-child td {
+    border-bottom: none; /* Remove bottom border for last row */
+  }
+  

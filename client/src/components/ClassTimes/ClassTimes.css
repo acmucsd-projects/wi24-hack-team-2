@@ -1,0 +1,25 @@
+.ClassTimes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .form-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    align-items: center;
+    gap: 10px; /* Add some space between elements */
+  }
+  
+  
+  .header3 {
+    grid-column: 2 / span 1; /* Span 1 column starting from column 2 */
+  }
+  
+  .classTimes {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  

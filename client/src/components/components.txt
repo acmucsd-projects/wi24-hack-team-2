@@ -20,11 +20,10 @@ h2{
     font-weight: 400;
     font-size: 30px;
     line-height: 1.2;
-    text-align: left;
+    text-align: center;
     text-transform: lowercase;
     letter-spacing: 0.1rem;
     font-family: 'Karla', sans-serif;
-    margin-left: 130px;
 }
 
 table{
@@ -40,7 +39,9 @@ table{
     white-space: break-spaces;
     margin-bottom: 30px;
     margin-top: 30px;
-
+    margin-left: auto;
+    margin-right: auto;
+    
 }
 
 th{
@@ -62,3 +63,4 @@ td{
     padding: 5px;
     text-align: right;
 }
+>

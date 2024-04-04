@@ -1,0 +1,35 @@
+.switch {
+  display: flex;
+  align-items: center; /* Center items vertically */
+  justify-content: center; /* Center items horizontally */
+}
+
+.switch input[type="button"]:first-child {
+  padding: 10px 20px;
+  width: 120px; /* Set a fixed width for the buttons */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0 5px; /* Add margin to separate the buttons */
+  clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 25% 100%, 0% 50%);
+}
+
+.switch input[type="button"]:last-child {
+  padding: 10px 20px;
+  width: 120px; /* Set a fixed width for the buttons */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0 5px; /* Add margin to separate the buttons */
+  clip-path: polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%);
+}
+
+
+
+.switch input[type="button"]:hover {
+  background-color: #0056b3;
+}

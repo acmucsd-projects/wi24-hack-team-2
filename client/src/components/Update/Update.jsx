@@ -1,4 +1,5 @@
 import React from 'react';
+import './Update.css';
 //put css in a css file and import
 const Update = () => {
 
@@ -6,7 +7,7 @@ const Update = () => {
   return (
     //put html code here
     <div className="update">
-      <button type="submit">Update</button>
+      <button type="submit" className="update-button">Update</button>
     </div>
   );
 };

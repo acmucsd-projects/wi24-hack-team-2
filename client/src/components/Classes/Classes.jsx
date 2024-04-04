@@ -1,14 +1,14 @@
 import React from 'react';
-import './components.css';
+import './Classes.css';
 //put css in a css file and import
 const Classes = () => {
 
-    //put java script code here
+    //put javascript code here
   return (
     //put html code here
     <div className="Classes">
       <link rel="stylesheet" href="Classes.css" />
-      <h2>Classses</h2>
+      <h2 class = "header">Classses</h2>
     </div>
   );
 };

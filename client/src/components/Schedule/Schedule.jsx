@@ -1,4 +1,5 @@
 import React from 'react';
+import './Schedule.css';
 //put css in a css file and import
 const Schedule = () => {
 
@@ -24,6 +25,14 @@ const Schedule = () => {
           <td></td>
         </tr>
         <tr>
+          <td>8:30</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
           <td>9:00</td>
           <td></td>
           <td></td>
@@ -32,7 +41,15 @@ const Schedule = () => {
           <td></td>
         </tr>
         <tr>
-          <td>10:00</td>
+          <td>9:30</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>10:30</td>
           <td></td>
           <td></td>
           <td></td>
@@ -48,7 +65,23 @@ const Schedule = () => {
           <td></td>
         </tr>
         <tr>
+          <td>11:30</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
           <td>12:00</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>12:30</td>
           <td></td>
           <td></td>
           <td></td>
@@ -64,7 +97,23 @@ const Schedule = () => {
           <td></td>
         </tr>
         <tr>
+          <td>1:30</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
           <td>2:00</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>2:30</td>
           <td></td>
           <td></td>
           <td></td>
@@ -80,7 +129,23 @@ const Schedule = () => {
           <td></td>
         </tr>
         <tr>
+          <td>3:30</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
           <td>4:00</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>4:30</td>
           <td></td>
           <td></td>
           <td></td>
@@ -96,7 +161,23 @@ const Schedule = () => {
           <td></td>
         </tr>
         <tr>
+          <td>5:30</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
           <td>6:00</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>6:30</td>
           <td></td>
           <td></td>
           <td></td>
@@ -112,7 +193,39 @@ const Schedule = () => {
           <td></td>
         </tr>
         <tr>
+          <td>7:30</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
           <td>8:00</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>8:30</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>9:00</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>9:30</td>
           <td></td>
           <td></td>
           <td></td>

@@ -1,11 +1,10 @@
 import React from 'react';
 import './App.css';
-import ClassTimes from './components/ClassTimes';
-import Classes from './components/Classes';
-import Update from './components/Update';
-import Switch from './components/Switch';
-import Schedule from './components/Schedule';
-import Rating from './components/Rating';
+import Classes from './components/Classes/Classes';
+import ClassTimes from './components/ClassTimes/ClassTimes';
+import Update from './components/Update/Update';
+import Switch from './components/Switch/Switch';
+import Schedule from './components/Schedule/Schedule';
 //put css in a css file and import
 const App = () => {
 
@@ -13,10 +12,9 @@ const App = () => {
   return (
     //put html code here
     <div className="App">
-      <h1>Preferences</h1>
+      <h1 class = "top">Preferences</h1>
       <Classes />
       <ClassTimes />
-      <Rating />
       <Update />  
       <Switch />
       <Schedule />
