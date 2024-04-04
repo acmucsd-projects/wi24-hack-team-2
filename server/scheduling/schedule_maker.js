@@ -58,6 +58,8 @@ const doSectionsCollide = (section1, section2) => {
 };
 
 // updating this because I feel like there could be issues with the finals & midterms, because those don't have days
+// update this to ignore non-number times
+// update parseTime too
 const doMeetingsCollide = (meeting1, meeting2) => {
     if (meeting1.type === "FI" && meeting2.type === "FI"){
         if (meeting1.date === meeting2.date){
@@ -171,20 +173,19 @@ const sortInstrList = (instrList) => {
     return [...(sortInstrList(leftList)), pivot, ...(sortInstrList(rightList))];
 }
 
-const makeSchedule = (courseList, blacklist, graylist, distance, instrRating) => {
+const makeSchedule = (courseList, blacklist, graylist, distance, instrList) => {
     checkCourseValidity(courseList);
     // check courseList length
     const sectionOptions = [];
 
     // find the top professors, add their sections only
-    if (instrRating) {
-        const limit = 0.20; // keep only top 20% (rounded up)
-        // go through the professors available for a course, remove the bottom _% of professors
+    if (instrList.length > 0) {
+        // go through the professors available for a course, find only professors in list
         for (const code of courseList) {
             const courseSections = [];
             // check section.instructor.0 in the instructors database
             // find DIFFERENT instructors and put all the instructors for the class in a list with the scores
-            const course = collection.findOne({ code: code });
+            /*const course = collection.findOne({ code: code });
             const instrList = [];
             for (let section of course.sections) {
                 const instructor = section.instructors[0]; // might not work with multiple instructors for one section
@@ -200,11 +201,12 @@ const makeSchedule = (courseList, blacklist, graylist, distance, instrRating) =>
             for (let i = 0; i < top; i++) {
                 topInstrList[i] = instrList[i];
             }
+            */
 
             // add all sections with the professors to the sectionOptions
             for (let section of course.sections) {
                 const instructor = section.instructors[0];
-                if (topInstrList.includes(instructor)) {
+                if (instrList.includes(instructor)) {
                     courseSections.push(section);
                 }
             }
