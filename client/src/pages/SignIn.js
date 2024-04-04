@@ -1,6 +1,6 @@
 import React from 'react';
 import '../App.css';
-import SignInPage from '../components/SignIn/SignIn.jsx';
+import SignInPage from '../components/sign-in/sign-in';
 
 const SignIn = () => {
     return (
