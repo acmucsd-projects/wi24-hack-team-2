@@ -5,39 +5,46 @@ const Instructor = require("../models/instructor");
 const { parseHTML: linkedomParse } = require("linkedom");
 
 async function scrape() {
-  const instructors = await Instructor.find({});
+  // const instructors = await Instructor.find({});
+  // TODO: make this nicer
+  const instructors = await Instructor.find({ capes: { $exists: false } });
 
   const bar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
   bar.start(instructors.length, 0);
 
-  const promises = instructors.map(
-    async (doc) => await scrapeInstructor(doc, bar),
-  );
+  let docsToUpdate;
+  try {
+    const promises = instructors.map(
+      async (doc) => await scrapeInstructor(doc._id, doc.get("name"), bar),
+    );
 
-  const docsToUpdate = (await Promise.all(promises)).filter(
-    (doc) => doc !== undefined,
-  );
+    docsToUpdate = (await Promise.allSettled(promises))
+      .filter(
+        ({ status, value }) => status === "fulfilled" && value !== undefined,
+      )
+      .map(({ value }) => value);
 
-  console.log(`[CAPEs] Updating ${docsToUpdate.filter.length} instructors`);
+    bar.stop();
+  } catch (e) {
+    bar.stop();
+    console.error(e);
+    console.log("[CAPEs] Error above, still updating what we have");
+  }
 
-  console.log(docsToUpdate);
+  console.log(`[CAPEs] Updating ${docsToUpdate.length} instructors`);
 
   await Instructor.bulkWrite(
-    docsToUpdate.map((doc) => ({
+    docsToUpdate.map(({ id, data }) => ({
       updateOne: {
-        filter: { _id: doc._id },
-        update: { $set: doc },
+        filter: { _id: id },
+        update: { capes: data },
         upsert: true,
       },
     })),
   );
-
-  bar.stop();
 }
 
-async function scrapeInstructor(doc, bar) {
-  const name = doc.get("name");
-
+async function scrapeInstructor(id, name, bar) {
   // console.log(`[CAPEs] Scraping CAPEs for ${name}`);
 
   try {
@@ -48,7 +55,7 @@ async function scrapeInstructor(doc, bar) {
       return;
     }
 
-    const data = parseHTML(html);
+    const data = await parseHTML(html);
     if (data === null) {
       // console.log(`[CAPEs] No results found for ${name}`);
       bar.increment();
@@ -59,9 +66,8 @@ async function scrapeInstructor(doc, bar) {
 
     // console.log(`[CAPEs] Got CAPEs for ${name}`);
 
-    doc.set("capes", data);
     bar.increment();
-    return doc;
+    return { id, data };
   } catch (e) {
     if (e.message === "CAPEs cookie expired") {
       console.error(`[CAPEs] Cookie expired`);
@@ -83,7 +89,7 @@ async function getHTMLForInstructor(name) {
   });
 
   if (response.status !== 200) {
-    throw new Error("Failed to get HTML for instructor");
+    return Promise.reject("Failed to get HTML for instructor");
   }
 
   return response.data;
@@ -101,7 +107,8 @@ async function parseHTML(html) {
   const courses = new Map();
 
   if (table === null) {
-    throw new Error("CAPEs cookie expired");
+    console.log("Rejective promise: cookie expired");
+    return Promise.reject("CAPEs cookie expired");
   }
 
   // Transform each row to an object and insert into course map

@@ -25,6 +25,8 @@ async function main() {
   await scrapeSchedule();
   console.log("[Schedule] done");
 
+  // await Course.updateMany({}, { $set: { capes: undefined } });
+
   console.log("[CAPEs] start");
   await scrapeCAPEs();
   console.log("[CAPEs] done");
