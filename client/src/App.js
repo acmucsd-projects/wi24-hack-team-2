@@ -5,6 +5,8 @@ import ClassTimes from './components/ClassTimes/ClassTimes';
 import Update from './components/Update/Update';
 import Switch from './components/Switch/Switch';
 import Schedule from './components/Schedule/Schedule';
+import SignIn from './pages/SignIn';
+
 //put css in a css file and import
 const App = () => {
 
@@ -18,6 +20,7 @@ const App = () => {
       <Update />  
       <Switch />
       <Schedule />
+      <SignIn />
     </div>
   );
 };
