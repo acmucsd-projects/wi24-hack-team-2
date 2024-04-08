@@ -31,6 +31,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css';
 import SignIn from './pages/SignIn'
 import Home from './pages/Home'
+import AddClass from './pages/AddClass'
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
           <Routes>
             <Route path='/' element={<SignIn />}/>
             <Route path='/home' element={<Home />}/>
+            <Route path='/addclass' element={<AddClass />}/>
           </Routes>
         </div>
       </BrowserRouter>
