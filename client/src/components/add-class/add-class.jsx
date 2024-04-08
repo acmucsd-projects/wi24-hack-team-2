@@ -16,16 +16,15 @@ export default function AddClass() {
 
             <body>
                 <h1>add class</h1>
-                <ClassSearch />
 
                 <div>
                     <h2> name </h2>
-                    
+                    <ClassSearch />
                 </div>
 
                 <div>
                     <h2> professors </h2>
-                    
+                    <Professor />
                 </div>
 
             </body>
