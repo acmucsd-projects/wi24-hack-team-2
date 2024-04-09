@@ -1,14 +1,14 @@
-const { MongoClient } = require("mongodb");
-const client = new MongoClient(process.env.DB_URL);
-const test_course_list = ["CSE 12", "CSE 15L", "WCWP 10A"];
-const database = client.db('test'); 
-const collection = database.collection('courses');
+const mongoose = require('mongoose');
+const Course = require("../models/course")
+// const client = mongoose(process.env.DB_URL);
+// const database = client.db('test'); 
+// const collection = database.collection('courses');
 
 // Check if courses are valid in database, might be relevant if database is not up to date with drop-down menu
 // Returns true if list of courses is all valid, throws Error if not
 const checkCourseValidity = (courseList) => {
     for (let code of courseList) {
-            const existingItem = collection.findOne({ code: code });
+            const existingItem = Course.findOne({ code: code });
             if (!existingItem) {
                 throw new Error(`Item with code '${code}' does not exist.`);
             }
@@ -216,7 +216,7 @@ const makeSchedule = (courseList, blacklist, graylist, instrList) => {
     else {
         for (const code of courseList) {
             const courseSections = [];
-            const course = collection.findOne({ code: code });
+            const course = Course.findOne({ code: code });
             for (let section of course.sections) {
                 courseSections.push(section);
             }
@@ -294,8 +294,37 @@ const makeSchedule = (courseList, blacklist, graylist, instrList) => {
     // push the schedules to Mongo
 }
 
+const findProfs = (courseCode) => {
+    const course = Course.findOne({ code: courseCode });
+    const instrList = [];
+    for (let section of course.sections) {
+        const instructor = section.instructors[0]; // might not work with multiple instructors for one section
+        if (!instrList.includes(instructor)) {
+            instrList.push(instructor)
+        }
+    }
+
+    instrNames = []
+    courseRating = []
+    overallRating = []
+
+    for (instr of instrList) {
+        instrNames.push(instr.name)
+        overallRating.push(instr.capes.overall.longTerm.rcmndInstr)
+        try {
+            courseRating.push(instr.capes.courses[courseCode])
+        }
+        catch {
+            courseRating.push(null)
+        }
+    }
+
+    return [instrNames, courseRating, overallRating]
+}
+
 module.exports = {
-    makeSchedule
+    makeSchedule, 
+    findProfs
 }
 
 

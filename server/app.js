@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 
 const scheduleRoutes = require("./routes/schedules");
 const userRoutes = require("./routes/users");
+const professorRoutes = require("./routes/professor");
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use((req, res, next) => {
 //routes
 app.use("/api/schedules", scheduleRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/professor", professorRoutes);
 
 dotenv.config();
 
@@ -30,5 +32,9 @@ mongoose
   .then(() => {
     console.log("Connected to MongoDB database");
   });
+
+app.listen(process.env.PORT, () => {
+    console.log("Server started on PORT " + process.env.PORT);
+});
 
 module.exports = app;

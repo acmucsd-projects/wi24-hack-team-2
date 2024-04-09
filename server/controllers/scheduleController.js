@@ -77,7 +77,7 @@ const createSchedule = async (req, res) => {
 // }
 
 module.exports = {
-    createSchedule, 
+    createSchedule
     // getAllSchedules, 
     // getSchedule, 
     // deleteSchedule, 
