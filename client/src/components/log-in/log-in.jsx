@@ -1,41 +1,40 @@
 import axios from 'axios'
 import React, {useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import './sign-in.css';
+import './log-in.css';
 
 
 
-export default function SignIn() {
-
-    const navigate = useNavigate();
+export default function LogIn() {
+    const navigate= useNavigate();
     const [values, setValues] = useState({
         email: '',
         password:'',
     });
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
-    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             console.log('in try')
-            const response = await axios.post('http://localhost:4000/api/users/signup', {
+            const response = await axios.post('http://localhost:4000/api/users/login', {
                 email: values.email,
                 password: values.password,
             });
             const token = response.data.token;
 
             setError(null);
-            setSuccess('Sign up successful!')
-            console.log('User signed up successfully. Token:', token);
+            setSuccess('Log in successful!')
+            console.log('User logged in successfully. Token:', token);
             console.log(response.data);
             navigate('/home');
             
         } catch (error) {
             setSuccess(null);
             setError(error.response.data.error)
-            console.log('User sign up unsuccessful:', error.response.data.error, error)
+            
+            console.log('User log up unsuccessful:', error.response.data.error, error)
     
         }
     };
@@ -50,7 +49,7 @@ export default function SignIn() {
 
             <body>
                 <div>
-                    <h1>sign up</h1>
+                    <h1>log in</h1>
                 </div>
 
                 <div>
@@ -66,21 +65,17 @@ export default function SignIn() {
                         </div>
 
                         <div>
-                        <p>Already a user? <Link to="/login">Login Here</Link></p>
-                        </div>
-
-                        <div>
-                            <input type="submit" class="input-button" value="sign up"/>
+                            <input type="submit" class="input-button" value="log in"/>
                         </div>
                     </form>
-
-                    
-
                     <div className='text-warning'>
                         {error && error}
                         {success && success}
                 </div>
+                <div>
                 
+                </div>
+            
                 </div>
             </body>
         </main>
