@@ -33,8 +33,4 @@ mongoose
     console.log("Connected to MongoDB database");
   });
 
-app.listen(process.env.PORT, () => {
-    console.log("Server started on PORT " + process.env.PORT);
-});
-
 module.exports = app;
