@@ -7,20 +7,21 @@
 .switch input[type="button"]:first-child {
   padding: 10px 20px;
   width: 120px; /* Set a fixed width for the buttons */
-  background-color: #007bff;
-  color: white;
+  background-color: #2D7A88;
+  color: #EEE9E6;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   margin: 0 5px; /* Add margin to separate the buttons */
   clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 25% 100%, 0% 50%);
+  text-align: right;
 }
 
 .switch input[type="button"]:last-child {
   padding: 10px 20px;
   width: 120px; /* Set a fixed width for the buttons */
-  background-color: #007bff;
-  color: white;
+  background-color: #2D7A88;
+  color: #EEE9E6;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -31,5 +32,5 @@
 
 
 .switch input[type="button"]:hover {
-  background-color: #0056b3;
+  opacity: 70%;
 }

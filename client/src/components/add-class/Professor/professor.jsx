@@ -1,19 +1,21 @@
 import React from 'react';
 import './professor.css';
 //put css in a css file and import
-const Professor = () => {
-    const testProfs = [
-        'Paul Cao',
-        'Miles Jones', 
-        'Meredith Crane'
-    ];
 
+const testProfs = [
+    {id: 1, name: 'Paul Cao'},
+    {id: 2, name: 'Miles Jones'}, 
+    {id: 3, name: 'Meredith Crane'}
+];
+
+const Professor = () => {
     // https://stackoverflow.com/questions/386281/how-to-implement-select-all-check-box-in-html
     /*function toggle(source) {
         let checkboxes = document.getElementsByName('professor');
         for(var checkbox in checkboxes)
             checkbox.checked=source.checked;
     }*/
+    
 
     return (
         //put html code here

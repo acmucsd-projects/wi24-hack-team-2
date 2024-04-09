@@ -12,11 +12,11 @@
   cursor: default;
 }
 
-body {
+#signin {
   background-color:#EEE9E6; 
   text-align:center; 
   width: 75%;
-  
+
   position:absolute; 
   top:50%; 
   left:50%; 
@@ -26,6 +26,8 @@ body {
 div {
   padding: 10px;
   text-align: center;
+
+  
 }
 
 h1 {

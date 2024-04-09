@@ -8,7 +8,7 @@ const Classes = () => {
     //put html code here
     <div className="Classes">
       <link rel="stylesheet" href="Classes.css" />
-      <h2 class = "header">Classses</h2>
+      <h2 class = "header">classes</h2>
     </div>
   );
 };

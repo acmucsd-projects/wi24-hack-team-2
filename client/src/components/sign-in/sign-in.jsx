@@ -11,7 +11,7 @@ export default function SignIn() {
                 </style>
             </head>
 
-            <body>
+            <body id="signin">
                 <div>
                     <h1>sign up</h1>
                 </div>

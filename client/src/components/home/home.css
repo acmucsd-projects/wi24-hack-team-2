@@ -10,35 +10,27 @@
     color: #1D2348;
     text-align: left;
     cursor: default;
-  }
+}
   
-  #addclass {
+#home {
     background-color:#EEE9E6; 
-    width: 65%;
-    text-align: center;
-    
+    text-align:center; 
+    width: 100%;
+
     position:absolute; 
-    top:50%; 
+    top:110%; 
     left:50%; 
-    transform: translate(-50%, -50%); 
-  }
-  
-  div {
+    transform: translate(-50%, -50%);
+}
+
+div {
     padding: 10px;
     text-align: center;
-  }
-  
-  h1 {
+}
+
+h1 {
     font-size: 50px;
     color: #1D2348;
     font-weight: bold;
     text-align: center;
-  }
-
-  h2 {
-    font-size: 40px;
-    color: #2D7A88;
-    font-weight: normal;
-    text-align: center; 
-    margin-top: 10px;
-  }
+}

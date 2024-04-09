@@ -14,7 +14,7 @@ export default function AddClass() {
                 </style>
             </head>
 
-            <body>
+            <body id="addclass">
                 <h1>add class</h1>
 
                 <div>

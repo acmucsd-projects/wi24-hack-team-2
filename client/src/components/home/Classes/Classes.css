@@ -1,12 +1,9 @@
 .header{
-    font-size: 2.5rem;
-    margin: 2rem 0;
     color: #2d7a88;
     font-weight: 400;
-    font-size: 30px;
-    line-height: 1.2;
+    font-size: 40px;
+    line-height: 1;
     text-align: center;
     text-transform: lowercase;
-    letter-spacing: 0.1rem;
     font-family: 'Karla', sans-serif;
 }
