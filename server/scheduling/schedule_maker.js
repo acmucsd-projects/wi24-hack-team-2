@@ -173,7 +173,7 @@ const sortInstrList = (instrList) => {
     return [...(sortInstrList(leftList)), pivot, ...(sortInstrList(rightList))];
 }
 
-const makeSchedule = (courseList, blacklist, graylist, distance, instrList) => {
+const makeSchedule = (courseList, blacklist, graylist, instrList) => {
     checkCourseValidity(courseList);
     // check courseList length
     const sectionOptions = [];
@@ -291,14 +291,18 @@ const makeSchedule = (courseList, blacklist, graylist, distance, instrList) => {
         }
     }
     return schedules;
+    // push the schedules to Mongo
+}
+
+module.exports = {
+    makeSchedule
 }
 
 
+// const scheduleList = makeSchedule([], ["CSE 12", "CSE 15L", "WCWP 10A"], ["M 12:00p 1:00p", "Tu 7:00p 8:00p"], ["W 12:00p 1:00p", "Th 7:00p 8:00p"], false, true)
 
-const scheduleList = makeSchedule([], ["CSE 12", "CSE 15L", "WCWP 10A"], ["M 12:00p 1:00p", "Tu 7:00p 8:00p"], ["W 12:00p 1:00p", "Th 7:00p 8:00p"], false, true)
+// // Example usage:
+// const currentEnrolledSections = [/* ... array of section objects the user is already enrolled in ... */];
+// const newCourse = {/* ... course object with sections ... */};
 
-// Example usage:
-const currentEnrolledSections = [/* ... array of section objects the user is already enrolled in ... */];
-const newCourse = {/* ... course object with sections ... */};
-
-const availableSections = findNonCollidingSections(currentEnrolledSections, newCourse);
+// const availableSections = findNonCollidingSections(currentEnrolledSections, newCourse);
