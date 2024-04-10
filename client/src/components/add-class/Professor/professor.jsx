@@ -16,9 +16,9 @@ const Professor = ({ selectedClass, setSelectedProfs }) => {
 
         const json = await res.json();
 
-        setProfs(json);
-
-        console.log(json);
+        if (typeof json === "object" && typeof json.length === "number") {
+            setProfs(json);
+        }
     };
 
     useEffect(() => {
