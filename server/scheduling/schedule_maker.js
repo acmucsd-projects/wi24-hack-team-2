@@ -9,54 +9,37 @@ const Instructor = require("../models/instructor")
 // Returns true if list of courses is all valid, throws Error if not
 const checkCourseValidity = async (courseList) => {
     for (let code of courseList) {
-            const existingItem = await Course.findOne({ code: code });
-            if (!existingItem) {
-                throw new Error(`Item with code '${code}' does not exist.`);
-            }
+        const existingItem = await Course.findOne({ code: code });
+        if (!existingItem) {
+            throw new Error(`Item with code '${code}' does not exist.`);
         }
+    }
     console.log('All items exist in the database.');
     return true;
 }
 
 
-const findNonCollidingSections = async (currentEnrolledSections, newCourse) => {
-    const nonCollidingSections = [];
-
-    for (let newSection of newCourse.sections) {
-        let collides = false;
-        for (let enrolledSection of currentEnrolledSections) {
-            if (doSectionsCollide(newSection, enrolledSection)) {
-                collides = true;
-                break;
-            }
-        }
-        if (!collides) {
-            nonCollidingSections.push(newSection);
-        }
-    }
-
-    return nonCollidingSections;
-};
-
 const doesSectionFit = async (currentEnrolledSections, newSection) => {
-    for (let section of currentEnrolledSections) {
-        if (doSectionsCollide(section, newSection)) {
+    for (section of currentEnrolledSections) {
+        const sectionsCollide = await doSectionsCollide(section, newSection);
+        if (sectionsCollide) {
             return false;
         }
     }
     return true;
-};
+}
 
 const doSectionsCollide = async (section1, section2) => {
-    for (let meeting1 of section1.meetings) {
-        for (let meeting2 of section2.meetings) {
-            if (doMeetingsCollide(meeting1, meeting2)) {
+    for (meeting1 of section1.meetings) {
+        for (meeting2 of section2.meetings) {
+            const collision = await doMeetingsCollide(meeting1, meeting2);
+            if (collision) {
                 return true;
             }
         }
     }
     return false;
-};
+}
 
 // updating this because I feel like there could be issues with the finals & midterms, because those don't have days
 // update this to ignore non-number times
@@ -64,10 +47,10 @@ const doSectionsCollide = async (section1, section2) => {
 const doMeetingsCollide = async (meeting1, meeting2) => {
     if (meeting1.type === "FI" && meeting2.type === "FI"){
         if (meeting1.date === meeting2.date){
-            const start1 = parseTime(meeting1.startTime);
-            const end1 = parseTime(meeting1.endTime);
-            const start2 = parseTime(meeting2.startTime);
-            const end2 = parseTime(meeting2.endTime);
+            const start1 = await parseTime(meeting1.startTime);
+            const end1 = await parseTime(meeting1.endTime);
+            const start2 = await parseTime(meeting2.startTime);
+            const end2 = await parseTime(meeting2.endTime);
 
             return start1 < end2 && start2 < end1;
         }
@@ -76,21 +59,21 @@ const doMeetingsCollide = async (meeting1, meeting2) => {
     if (meeting1.type === "MI"){
         if (meeting2.type === "MI"){
             if (meeting1.date === meeting2.date){
-                const start1 = parseTime(meeting1.startTime);
-                const end1 = parseTime(meeting1.endTime);
-                const start2 = parseTime(meeting2.startTime);
-                const end2 = parseTime(meeting2.endTime);
+                const start1 = await parseTime(meeting1.startTime);
+                const end1 = await parseTime(meeting1.endTime);
+                const start2 = await parseTime(meeting2.startTime);
+                const end2 = await parseTime(meeting2.endTime);
 
                 return start1 < end2 && start2 < end1;
             }
             return false;
         }
-        const day = dayOfWeek(meeting1.date);
+        const day = await dayOfWeek(meeting1.date);
         if (meeting2.days.includes(day)) {
-            const start1 = parseTime(meeting1.startTime);
-            const end1 = parseTime(meeting1.endTime);
-            const start2 = parseTime(meeting2.startTime);
-            const end2 = parseTime(meeting2.endTime);
+            const start1 = await parseTime(meeting1.startTime);
+            const end1 = await parseTime(meeting1.endTime);
+            const start2 = await parseTime(meeting2.startTime);
+            const end2 = await parseTime(meeting2.endTime);
 
             return start1 < end2 && start2 < end1;
         }
@@ -98,12 +81,12 @@ const doMeetingsCollide = async (meeting1, meeting2) => {
     }
 
     if(meeting2.type === "MI"){
-        const day = dayOfWeek(meeting2.date);
+        const day = await dayOfWeek(meeting2.date);
         if (meeting1.days.includes(day)) {
-            const start1 = parseTime(meeting1.startTime);
-            const end1 = parseTime(meeting1.endTime);
-            const start2 = parseTime(meeting2.startTime);
-            const end2 = parseTime(meeting2.endTime);
+            const start1 = await parseTime(meeting1.startTime);
+            const end1 = await parseTime(meeting1.endTime);
+            const start2 = await parseTime(meeting2.startTime);
+            const end2 = await parseTime(meeting2.endTime);
 
             return start1 < end2 && start2 < end1;
         }
@@ -111,10 +94,10 @@ const doMeetingsCollide = async (meeting1, meeting2) => {
     }
 
     if (meeting1.days.some(day => meeting2.days.includes(day))) {
-        const start1 = parseTime(meeting1.startTime);
-        const end1 = parseTime(meeting1.endTime);
-        const start2 = parseTime(meeting2.startTime);
-        const end2 = parseTime(meeting2.endTime);
+        const start1 = await parseTime(meeting1.startTime);
+        const end1 = await parseTime(meeting1.endTime);
+        const start2 = await parseTime(meeting2.startTime);
+        const end2 = await parseTime(meeting2.endTime);
 
         return start1 < end2 && start2 < end1;
     }
@@ -175,52 +158,45 @@ const sortInstrList = async (instrList) => {
 }
 
 const makeSchedule = async (courseList, blacklist, graylist, instrList) => {
-    checkCourseValidity(courseList);
-    // check courseList length
+    const valid = await checkCourseValidity(courseList);
+    if (!valid) {
+        console.log("invalid schedule");
+    }
     const sectionOptions = [];
 
     // find the top professors, add their sections only
     if (instrList.length > 0) {
         // go through the professors available for a course, find only professors in list
-        for (const code of courseList) {
+        for (const courseCode of courseList) {
             const courseSections = [];
             // check section.instructor.0 in the instructors database
             // find DIFFERENT instructors and put all the instructors for the class in a list with the scores
-            const course = await Course.findOne({ code: code });
-            /*const instrList = [];
-            for (let section of course.sections) {
-                const instructor = section.instructors[0]; // might not work with multiple instructors for one section
-                if (!instrList.includes(instructor)) {
-                    instrList.push(instructor)
-                }
+            const course = await Course.findOne({ code: courseCode });
+            if (!course) {
+                return [];
             }
-            // calculate how many instructors are in top 20%
-            // keep that many instructors
-            const top = Math.ceiling(limit*instrList.length);
-            sortInstrList(instrList);
-            const topInstrList = [];
-            for (let i = 0; i < top; i++) {
-                topInstrList[i] = instrList[i];
-            }
-            */
 
-            // add all sections with the professors to the sectionOptions
-            for (let section of course.sections) {
-                const instructor = section.instructors[0];
-                if (instrList.includes(instructor)) {
-                    courseSections.push(section);
-                }
-            }
+            course.get("sections").forEach(section => {
+                section.get("instructors").forEach(instr => {
+                    if (instrList.includes(instr)) {
+                        courseSections.push(section);
+                    }
+                })
+            });
             sectionOptions.push(courseSections);
         }
     }
     else {
-        for (const code of courseList) {
+        for (const courseCode of courseList) {
             const courseSections = [];
-            const course = await Course.findOne({ code: code });
-            for (let section of course.sections) {
-                courseSections.push(section);
+            const course = await Course.findOne({ code: courseCode });
+            if (!course) {
+                return [];
             }
+
+            course.get("sections").forEach(section => {
+                courseSections.push(section);
+            });
             sectionOptions.push(courseSections);
         }
     }
@@ -229,23 +205,19 @@ const makeSchedule = async (courseList, blacklist, graylist, instrList) => {
     // if at any point this leaves no sections for a certain course, output a message
     for (const time of blacklist) {
         const timeSplit = time.split(' ');
-        const meeting = {type: "Blacklist", days: [timeSplit[0]], startTime: timeSplit[1], endTime: timeSplit[2]};
-        const fakeSection = [meeting];
-        for (course in sectionOptions) {
+        const meeting = [{type: "Blacklist", days: [timeSplit[0]], startTime: timeSplit[1], endTime: timeSplit[2]}];
+        const fakeSection = {meetings: meeting};
+        for (let course of sectionOptions) {
             for (let i = 0; i < course.length; i++) {
-                section = course[i];
-                if (doSectionsCollide(fakeSection, section)){
+                const section = course[i];
+                const sectionsCollide = await doSectionsCollide(fakeSection, section);
+                if (sectionsCollide){
                     course.splice(i, 1);
                     i--;
                 }
             }
             if (course.length == 0) {
-                if (instrRating) {
-                    throw new Error(`Course with code '${courseList[sectionOptions.indexOf(course)]}' conflicts with blacklist times and instructor requirements. Consider changing one of these.`);
-                }
-                else {
-                    throw new Error(`Course with code '${courseList[sectionOptions.indexOf(course)]}' conflicts with blacklist times. Consider changing some of them.`);
-                }
+                throw new Error(`Course with code '${courseList[sectionOptions.indexOf(course)]}' conflicts with blacklist times. Consider changing some of them.`);
             }
         }
     }
@@ -254,13 +226,13 @@ const makeSchedule = async (courseList, blacklist, graylist, instrList) => {
     // if at any point this leaves no sections for a certain course, ignore the gray list for that course, and output a message
     for (const time of graylist) {
         const timeSplit = time.split(' ');
-        const meeting = {type: "Graylist", days: [timeSplit[0]], startTime: timeSplit[1], endTime: timeSplit[2]};
-        const fakeSection = [meeting];
-        for (course in sectionOptions) {
-            const tempCourse = course;
+        const meeting = [{type: "Graylist", days: [timeSplit[0]], startTime: timeSplit[1], endTime: timeSplit[2]}];
+        const fakeSection = {meetings: meeting};
+        for (let course of sectionOptions) {
             for (let i = 0; i < course.length; i++) {
-                section = course[i];
-                if (doSectionsCollide(fakeSection, section)){
+                const section = course[i];
+                const sectionsCollide = await doSectionsCollide(fakeSection, section);
+                if (sectionsCollide){
                     course.splice(i, 1);
                     i--;
                 }
@@ -272,26 +244,46 @@ const makeSchedule = async (courseList, blacklist, graylist, instrList) => {
         }
     }
     // should first order sectionOptions to go from least section classes to most section classes
-
-    const schedules = [];
-    for (section of sectionOptions[0]) {
+    let schedules = [];
+    for (const section of sectionOptions[0]) {
         schedules.push([section]);
     }
     for (let i = 1; i < sectionOptions.length; i++) {
-        for (section of sectionOptions[i]){
-            const tempSchedule = [];
-            for (schedule of schedules) {
-                if (doesSectionFit(schedule, section)) {
+        const tempSchedule = [];
+        for (const section of sectionOptions[i]){
+            for (const schedule of schedules) {
+                const sectionFits = await doesSectionFit(schedule, section);
+                if (sectionFits) {
                     tempSchedule.push([...schedule, section])
                 }
             }
             if (tempSchedule.length == 0) {
                 throw new Error(`No schedule exists with all criteria; please change some and try again`);
             }
-            schedules = tempSchedule;
         }
+        schedules = tempSchedule;
     }
-    return schedules;
+    const nice_text = [];
+    console.log(schedules);
+    for (const schedule of schedules){
+        const str = [];
+        for (let i = 0; i < schedule.length; i++){
+            str.push(courseList[i] + " " + schedule[i].section);
+        }
+        nice_text.push(str);
+    }
+
+    const ret = [];
+    for (let i = 0; i < nice_text.length; i++) {
+        const schedule = {
+            name: nice_text[i],
+            data: schedules[i]
+        };
+        ret.push(schedule);
+    }
+    console.log(ret);
+
+    return ret;
     // push the schedules to Mongo
 }
 

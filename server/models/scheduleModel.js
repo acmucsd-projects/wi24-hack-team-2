@@ -8,7 +8,7 @@ const scheduleSchema = new Schema({
     //     //title isn't required for user to enter, a default title will be given if none is provided
     //     required: true
     // },
-    classes:  {
+    schedule:  {
         type: [], //list of lists of schedules
         required: true
     }

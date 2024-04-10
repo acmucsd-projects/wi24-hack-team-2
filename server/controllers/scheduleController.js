@@ -29,9 +29,9 @@ const maker = require('../scheduling/schedule_maker')
 const createSchedule = async (req, res) => {
     try {
         const {courseList, blacklist, graylist, instrList} = req.body
-        const {classes_list} = await maker.makeSchedule(courseList, blacklist, graylist, instrList)
-        scheduleList = await Schedule.create({classes_list})
-        res.status(200).json(scheduleList)
+        const classes_list = await maker.makeSchedule(courseList, blacklist, graylist, instrList)
+        scheduleList = await Schedule.create(classes_list)
+        res.status(200).json(classes_list)
     } 
 
     catch (error){
