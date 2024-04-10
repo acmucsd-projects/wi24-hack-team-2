@@ -40,7 +40,7 @@ export default function LogIn() {
     };
 
     return (
-        <main>
+        <main id="login">
                 <div>
                     <h1>log in</h1>
                 </div>

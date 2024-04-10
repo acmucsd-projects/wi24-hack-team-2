@@ -17,14 +17,12 @@ function App() {
       value={{ selectedClasses, setSelectedClasses }}
     >
       <BrowserRouter>
-        <div>
-          <Routes>
-            <Route path="/" element={<SignIn />} />
-            <Route path="/login" element={<LogIn />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/addclass" element={<AddClass />} />
-          </Routes>
-        </div>
+        <Routes>
+          <Route path="/" element={<SignIn />} />
+          <Route path="/login" element={<LogIn />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/addclass" element={<AddClass />} />
+        </Routes>
       </BrowserRouter>
     </SelectedClassesContext.Provider>
   );
