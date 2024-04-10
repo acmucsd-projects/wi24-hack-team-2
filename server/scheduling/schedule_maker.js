@@ -1,14 +1,15 @@
-const { MongoClient } = require("mongodb");
-const client = new MongoClient(process.env.DB_URL);
-const test_course_list = ["CSE 12", "CSE 15L", "WCWP 10A"];
-const database = client.db('test'); 
-const collection = database.collection('courses');
+const mongoose = require('mongoose');
+const Course = require("../models/course")
+const Instructor = require("../models/instructor")
+// const client = mongoose(process.env.DB_URL);
+// const database = client.db('test'); 
+// const collection = database.collection('courses');
 
 // Check if courses are valid in database, might be relevant if database is not up to date with drop-down menu
 // Returns true if list of courses is all valid, throws Error if not
-const checkCourseValidity = (courseList) => {
+const checkCourseValidity = async (courseList) => {
     for (let code of courseList) {
-            const existingItem = collection.findOne({ code: code });
+            const existingItem = await Course.findOne({ code: code });
             if (!existingItem) {
                 throw new Error(`Item with code '${code}' does not exist.`);
             }
@@ -18,7 +19,7 @@ const checkCourseValidity = (courseList) => {
 }
 
 
-const findNonCollidingSections = (currentEnrolledSections, newCourse) => {
+const findNonCollidingSections = async (currentEnrolledSections, newCourse) => {
     const nonCollidingSections = [];
 
     for (let newSection of newCourse.sections) {
@@ -37,7 +38,7 @@ const findNonCollidingSections = (currentEnrolledSections, newCourse) => {
     return nonCollidingSections;
 };
 
-const doesSectionFit = (currentEnrolledSections, newSection) => {
+const doesSectionFit = async (currentEnrolledSections, newSection) => {
     for (let section of currentEnrolledSections) {
         if (doSectionsCollide(section, newSection)) {
             return false;
@@ -46,7 +47,7 @@ const doesSectionFit = (currentEnrolledSections, newSection) => {
     return true;
 };
 
-const doSectionsCollide = (section1, section2) => {
+const doSectionsCollide = async (section1, section2) => {
     for (let meeting1 of section1.meetings) {
         for (let meeting2 of section2.meetings) {
             if (doMeetingsCollide(meeting1, meeting2)) {
@@ -60,7 +61,7 @@ const doSectionsCollide = (section1, section2) => {
 // updating this because I feel like there could be issues with the finals & midterms, because those don't have days
 // update this to ignore non-number times
 // update parseTime too
-const doMeetingsCollide = (meeting1, meeting2) => {
+const doMeetingsCollide = async (meeting1, meeting2) => {
     if (meeting1.type === "FI" && meeting2.type === "FI"){
         if (meeting1.date === meeting2.date){
             const start1 = parseTime(meeting1.startTime);
@@ -121,7 +122,7 @@ const doMeetingsCollide = (meeting1, meeting2) => {
 };
 
 // This part might not work for years after 2100
-const dayOfWeek = (dateString) => {
+const dayOfWeek = async (dateString) => {
     const [month, day, year] = dateString.split('/').map(Number);
     const yy = year - 2000; // only works for 2000 - 2099
     const yearCode = (yy + Math.floor(yy/4)) % 7;
@@ -140,7 +141,7 @@ const dayOfWeek = (dateString) => {
 };
 
 // I don't think this works with the am and pm so I'll update that. 
-const parseTime = (timeString) => {
+const parseTime = async (timeString) => {
     let offset = 0;
     const ampm = timeString.slice(timeString.length - 1);
     if (ampm === "a"){
@@ -153,7 +154,7 @@ const parseTime = (timeString) => {
     return offset + hours * 60 + minutes; // Convert time to minutes for easier comparison
 };
 
-const sortInstrList = (instrList) => {
+const sortInstrList = async (instrList) => {
     // sort by course? short term? long term?
     if (instrList.length <= 1) {
         return instrList;
@@ -163,7 +164,7 @@ const sortInstrList = (instrList) => {
     let rightList = [];
 
     for (let i = 1; i < instrList; i++) {
-        if (instrList[i].capes.overall.shortTerm.rcmndInstr < pivot.capes.overall.shortTerm.rcmndInstr) { //this can be adjusted, or put as a parameter
+        if (instrList[i].capes?.overall.shortTerm.rcmndInstr < pivot.capes?.overall.shortTerm.rcmndInstr) { //this can be adjusted, or put as a parameter
             leftList.push(instrList[i]);
         }
         else {
@@ -173,7 +174,7 @@ const sortInstrList = (instrList) => {
     return [...(sortInstrList(leftList)), pivot, ...(sortInstrList(rightList))];
 }
 
-const makeSchedule = (courseList, blacklist, graylist, distance, instrList) => {
+const makeSchedule = async (courseList, blacklist, graylist, instrList) => {
     checkCourseValidity(courseList);
     // check courseList length
     const sectionOptions = [];
@@ -185,8 +186,8 @@ const makeSchedule = (courseList, blacklist, graylist, distance, instrList) => {
             const courseSections = [];
             // check section.instructor.0 in the instructors database
             // find DIFFERENT instructors and put all the instructors for the class in a list with the scores
-            /*const course = collection.findOne({ code: code });
-            const instrList = [];
+            const course = await Course.findOne({ code: code });
+            /*const instrList = [];
             for (let section of course.sections) {
                 const instructor = section.instructors[0]; // might not work with multiple instructors for one section
                 if (!instrList.includes(instructor)) {
@@ -216,7 +217,7 @@ const makeSchedule = (courseList, blacklist, graylist, distance, instrList) => {
     else {
         for (const code of courseList) {
             const courseSections = [];
-            const course = collection.findOne({ code: code });
+            const course = await Course.findOne({ code: code });
             for (let section of course.sections) {
                 courseSections.push(section);
             }
@@ -291,14 +292,57 @@ const makeSchedule = (courseList, blacklist, graylist, distance, instrList) => {
         }
     }
     return schedules;
+    // push the schedules to Mongo
+}
+
+const findProfs = async (courseCode) => {
+    const course = await Course.findOne({ code: courseCode });
+    if (!course) {
+        return [];
+    }
+    const instrList = [];
+    course.get("sections").forEach(section => {
+        section.get("instructors").forEach(instr => {
+            instrList.push(instr);
+        })
+    });
+
+    const result = [];
+
+    for (const id of instrList) {
+        const instr = await Instructor.findOne({ _id: id });
+        if (!instr) {
+            continue;
+        }
+        const capes = instr.get("capes");
+        result.push({
+            name: instr.get("name"),
+            overall: {
+                shortTerm: capes.get("overall").get("shortTerm").get("rcmndInstr"),
+                longTerm: capes.get("overall").get("longTerm").get("rcmndInstr")
+            },
+            course: {
+                shortTerm: capes.get("courses").get(courseCode).get("shortTerm").get("rcmndInstr"),
+                longTerm: capes.get("courses").get(courseCode).get("longTerm").get("rcmndInstr")
+            }
+        });
+    }
+
+    console.log(result)
+
+    return result;
+}
+
+module.exports = {
+    makeSchedule, 
+    findProfs
 }
 
 
+// const scheduleList = makeSchedule([], ["CSE 12", "CSE 15L", "WCWP 10A"], ["M 12:00p 1:00p", "Tu 7:00p 8:00p"], ["W 12:00p 1:00p", "Th 7:00p 8:00p"], false, true)
 
-const scheduleList = makeSchedule([], ["CSE 12", "CSE 15L", "WCWP 10A"], ["M 12:00p 1:00p", "Tu 7:00p 8:00p"], ["W 12:00p 1:00p", "Th 7:00p 8:00p"], false, true)
+// // Example usage:
+// const currentEnrolledSections = [/* ... array of section objects the user is already enrolled in ... */];
+// const newCourse = {/* ... course object with sections ... */};
 
-// Example usage:
-const currentEnrolledSections = [/* ... array of section objects the user is already enrolled in ... */];
-const newCourse = {/* ... course object with sections ... */};
-
-const availableSections = findNonCollidingSections(currentEnrolledSections, newCourse);
+// const availableSections = findNonCollidingSections(currentEnrolledSections, newCourse);
