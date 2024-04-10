@@ -3,28 +3,27 @@ import "./professor.css";
 import { useState, useEffect } from "react";
 //put css in a css file and import
 
-const Professor = () => {
-    
-    const [profs, setProfs] = useState([
-        {
-            name: "Paul Cao",
-            classGrade: "3.3",
-            overallGrade: "3.4",
-            selected: false,
-        },
-        {
-            name: "Miles Jones",
-            classGrade: "2.3",
-            overallGrade: "2.9",
-            selected: false,
-        },
-        {
-            name: "Meridith Crane",
-            classGrade: "1.3",
-            overallGrade: "4.0",
-            selected: false,
-        },
-    ]);
+const Professor = ({ selectedClass, setSelectedProfs }) => {
+    const [profs, setProfs] = useState([]);
+    const [all, setAll] = useState(false);
+
+    const fetchProfs = async (selectedClass) => {
+        const res = await fetch("http://localhost:4000/api/professor", {
+            method: "POST",
+            body: JSON.stringify({ courseCode: selectedClass }),
+            headers: { "Content-Type": "application/json" },
+        });
+
+        const json = await res.json();
+
+        setProfs(json);
+
+        console.log(json);
+    };
+
+    useEffect(() => {
+        fetchProfs(selectedClass);
+    }, [selectedClass]);
 
     const changeProfState = (prof, selected) => {
         setProfs(
@@ -37,8 +36,13 @@ const Professor = () => {
         );
     };
 
+    // very troll but too late
     useEffect(() => {
-        console.log(profs.filter((prof) => prof.selected));
+        if (all) {
+            setSelectedProfs([]);
+        } else {
+            setSelectedProfs(profs.filter((p) => p.selected).map((p) => p.name));
+        }
     }, [profs]);
 
     return (
@@ -46,24 +50,57 @@ const Professor = () => {
         <div class="professor">
             <link rel="stylesheet" href="Classes.css" />
             <div>
-                {profs.map((prof) => (
-                    <div class="container">
-                        <input
-                            id={prof.name}
-                            type="checkbox"
-                            name="professor"
-                            value={prof.name}
-                            onChange={(event) => changeProfState(prof, event.target.checked)}
-                        ></input>
-                        <label for={prof.name}>
-                            {prof.name}
-                            <p class="subheading">
-                                average course GPA: {prof.classGrade} || overall GPA:{" "}
-                                {prof.overallGrade}
-                            </p>
-                        </label>
+                {selectedClass !== null ? (
+                    <div>
+                        <div class="container">
+                            <input
+                                type="checkbox"
+                                name="professor"
+                                id="all"
+                                value={all}
+                                onChange={(event) => setAll(event.target.checked)}
+                            ></input>
+                            <label for="all">
+                                any professor
+                                <p className="subheading"></p>
+                            </label>
+                        </div>
+                        {profs.map((prof) => (
+                            <div class="container">
+                                <input
+                                    id={prof.name}
+                                    type="checkbox"
+                                    name="professor"
+                                    value={prof.name}
+                                    onChange={(event) =>
+                                        changeProfState(prof, event.target.checked)
+                                    }
+                                ></input>
+                                <label for={prof.name}>
+                                    {prof.name}
+                                    <p class="subheading">
+                                        average course GPA:{" "}
+                                        {prof.course.short?.gpa ?? prof.course.long?.gpa} || overall
+                                        GPA: {prof.overall.short?.gpa ?? prof.course.long?.gpa}
+                                    </p>
+                                    <p class="subheading">
+                                        average course rcmnd:{" "}
+                                        {Math.round(
+                                            prof.course.short?.rcmnd ?? prof.course.long?.rcmnd,
+                                        )}
+                                        % || overall course rcmnd:{" "}
+                                        {Math.round(
+                                            prof.overall.short?.rcmnd ?? prof.course.long?.rcmnd,
+                                        )}
+                                        %
+                                    </p>
+                                </label>
+                            </div>
+                        ))}
                     </div>
-                ))}
+                ) : (
+                    <p className="subheading">select a class to see professor options</p>
+                )}
             </div>
         </div>
     );

@@ -303,7 +303,9 @@ const findProfs = async (courseCode) => {
     const instrList = [];
     course.get("sections").forEach(section => {
         section.get("instructors").forEach(instr => {
-            instrList.push(instr);
+            if (!instrList.includes(instr.toString())) {
+                instrList.push(instr.toString());
+            }
         })
     });
 
@@ -318,12 +320,24 @@ const findProfs = async (courseCode) => {
         result.push({
             name: instr.get("name"),
             overall: {
-                shortTerm: capes.get("overall").get("shortTerm").get("rcmndInstr"),
-                longTerm: capes.get("overall").get("longTerm").get("rcmndInstr")
+                short: {
+                    gpa: roundTwoPlaces(capes.get("overall").get("shortTerm").get("avgGrade") ),
+                    rcmnd: roundTwoPlaces(capes.get("overall").get("shortTerm").get("rcmndInstr")),
+                },
+                long: {
+                    gpa: roundTwoPlaces(capes.get("overall").get("longTerm").get("avgGrade")),
+                    rcmnd: roundTwoPlaces(capes.get("overall").get("longTerm").get("rcmndInstr")),
+                }
             },
             course: {
-                shortTerm: capes.get("courses").get(courseCode).get("shortTerm").get("rcmndInstr"),
-                longTerm: capes.get("courses").get(courseCode).get("longTerm").get("rcmndInstr")
+                short: {
+                    gpa: roundTwoPlaces(capes.get("courses").get(courseCode).get("shortTerm").get("avgGrade")),
+                    rcmnd: roundTwoPlaces(capes.get("courses").get(courseCode).get("shortTerm").get("rcmndInstr")),
+                },
+                long: {
+                    gpa: roundTwoPlaces(capes.get("courses").get(courseCode).get("longTerm").get("avgGrade")),
+                    rcmnd: roundTwoPlaces(capes.get("courses").get(courseCode).get("longTerm").get("rcmndInstr")),
+                }
             }
         });
     }
@@ -333,8 +347,12 @@ const findProfs = async (courseCode) => {
     return result;
 }
 
+const roundTwoPlaces = (num) => {
+    return Math.round(num * 100) / 100;
+}
+
 module.exports = {
-    makeSchedule, 
+    makeSchedule,
     findProfs
 }
 
