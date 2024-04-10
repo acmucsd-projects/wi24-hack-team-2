@@ -1,12 +1,63 @@
-.header{
-    font-size: 2.5rem;
-    margin: 2rem 0;
-    color: #2d7a88;
-    font-weight: 400;
-    font-size: 30px;
-    line-height: 1.2;
-    text-align: center;
-    text-transform: lowercase;
-    letter-spacing: 0.1rem;
-    font-family: 'Karla', sans-serif;
+
+.card {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 300px;
+    background-color: #2D7A88;
+    color: #EEE9E6;
+    border: none;
+    margin: 10px;
+    border-radius: 5px;
+    display: inline-block;
+    text-align: left;
+}
+
+.card-body {
+    display: inline-block;
+    background-color: #2D7A88;
+    padding: 0px;
+    margin: 0px;
+}
+
+.card-title {
+    font-size: 25px;
+    font-weight: bold;
+    background-color: #2D7A88;
+}
+
+.card-profs {
+    font-size: 15px;
+    background-color: #2D7A88;
+}
+
+#button {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 25px;
+    background-color: #2D7A88;
+    color: #EEE9E6;
+    border: none;
+    margin-top: 10px;
+    margin-left: 25px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #button:hover {
+    opacity: 70%;
+  }
+
+.delete-button {
+    padding: 10px;
+    font-size: 25px;
+    margin-left: 75px;
+    background-color: #2D7A88;
+    color: #EEE9E6;
+    border: none;
+    cursor: pointer;
+    float: right;
 }

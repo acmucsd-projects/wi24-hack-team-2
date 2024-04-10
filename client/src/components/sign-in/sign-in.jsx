@@ -48,8 +48,8 @@ export default function SignIn() {
                 </style>
             </head>
 
-            <body>
-                <div>
+            <body id="signin">
+                <div className='sign-in-div'>
                     <h1>sign up</h1>
                 </div>
 
