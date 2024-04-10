@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Course = require("../models/course")
+const Instructor = require("../models/instructor")
 // const client = mongoose(process.env.DB_URL);
 // const database = client.db('test'); 
 // const collection = database.collection('courses');
@@ -296,32 +297,40 @@ const makeSchedule = async (courseList, blacklist, graylist, instrList) => {
 
 const findProfs = async (courseCode) => {
     const course = await Course.findOne({ code: courseCode });
+    if (!course) {
+        return [];
+    }
     const instrList = [];
-    console.log(course)
-    console.log(course.get("sections"))
-    for (let section of course.sections) {
-        const instructor = section.instructors[0]; // might not work with multiple instructors for one section
-        if (!instrList.includes(instructor)) {
-            instrList.push(instructor)
+    course.get("sections").forEach(section => {
+        section.get("instructors").forEach(instr => {
+            instrList.push(instr);
+        })
+    });
+
+    const result = [];
+
+    for (const id of instrList) {
+        const instr = await Instructor.findOne({ _id: id });
+        if (!instr) {
+            continue;
         }
+        const capes = instr.get("capes");
+        result.push({
+            name: instr.get("name"),
+            overall: {
+                shortTerm: capes.get("overall").get("shortTerm").get("rcmndInstr"),
+                longTerm: capes.get("overall").get("longTerm").get("rcmndInstr")
+            },
+            course: {
+                shortTerm: capes.get("courses").get(courseCode).get("shortTerm").get("rcmndInstr"),
+                longTerm: capes.get("courses").get(courseCode).get("longTerm").get("rcmndInstr")
+            }
+        });
     }
 
-    instrNames = []
-    courseRating = []
-    overallRating = []
+    console.log(result)
 
-    for (instr of instrList) {
-        instrNames.push(instr.name)
-        overallRating.push(instr.capes?.overall.longTerm.rcmndInstr)
-        try {
-            courseRating.push(instr.capes?.courses[courseCode])
-        }
-        catch {
-            courseRating.push(null)
-        }
-    }
-
-    return [instrNames, courseRating, overallRating]
+    return result;
 }
 
 module.exports = {
