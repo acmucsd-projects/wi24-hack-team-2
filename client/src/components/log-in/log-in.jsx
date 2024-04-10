@@ -65,6 +65,10 @@ export default function LogIn() {
                         </div>
 
                         <div>
+                        <p>New User? <Link to="/">Sign Up Here</Link></p>
+                        </div>
+
+                        <div>
                             <input type="submit" class="input-button" value="log in"/>
                         </div>
                     </form>
