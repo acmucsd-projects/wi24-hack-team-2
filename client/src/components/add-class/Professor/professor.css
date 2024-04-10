@@ -1,0 +1,29 @@
+
+.professor {
+    width: 100%;
+    text-align: left;
+}
+
+.container {
+    display: block;
+    text-align: left;
+    margin-bottom: -30px;
+}
+
+input[type=checkbox] {
+    accent-color: #2d7a88;
+    transform: scale(1.5);
+}
+
+label {
+    font-size: 30px;
+    margin: 20px;
+    color: #1D2348;
+}
+
+.subheading {
+    font-size: 20px;
+    text-align: left;
+    color: #2d7a88;
+    margin-left: 33px;
+}

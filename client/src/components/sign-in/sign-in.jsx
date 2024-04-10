@@ -41,48 +41,38 @@ export default function SignIn() {
     };
 
     return (
-        <main>
-            <head>
-                <style>
-                    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karla"></link>
-                </style>
-            </head>
+        <main id="signin">
+            <div className='sign-in-div'>
+                <h1>sign up</h1>
+            </div>
 
-            <body>
-                <div>
-                    <h1>sign up</h1>
-                </div>
+            <div>
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <input type="email" class="input-field" placeholder="email"
+                        onChange={(e)=> setValues({...values, email: e.target.value})}/>
+                    </div>
 
-                <div>
-                    <form onSubmit={handleSubmit}>
-                        <div>
-                            <input type="email" class="input-field" placeholder="email"
-                            onChange={(e)=> setValues({...values, email: e.target.value})}/>
-                        </div>
+                    <div>
+                        <input type="password" class="input-field" placeholder="password"
+                        onChange={(e)=> setValues({...values, password: e.target.value})}/>
+                    </div>
 
-                        <div>
-                            <input type="password" class="input-field" placeholder="password"
-                            onChange={(e)=> setValues({...values, password: e.target.value})}/>
-                        </div>
+                    <div>
+                    <p>Already a user? <Link to="/login">Login Here</Link></p>
+                    </div>
 
-                        <div>
-                        <p>Already a user? <Link to="/login">Login Here</Link></p>
-                        </div>
+                    <div>
+                        <input type="submit" class="input-button" value="sign up"/>
+                    </div>
+                </form>
 
-                        <div>
-                            <input type="submit" class="input-button" value="sign up"/>
-                        </div>
-                    </form>
-
-                    
-
-                    <div className='text-warning'>
-                        {error && error}
-                        {success && success}
+                <div className='text-warning'>
+                    {error && error}
+                    {success && success}
                 </div>
                 
-                </div>
-            </body>
+            </div>
         </main>
     );
 }
