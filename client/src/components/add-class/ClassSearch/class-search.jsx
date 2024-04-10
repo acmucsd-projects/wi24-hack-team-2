@@ -1,24 +1,33 @@
 import React, { useMemo } from "react";
 import "./class-search.css";
 import { Combobox } from "@headlessui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // taken from https://headlessui.com/react/combobox
 
-const ClassSearch = () => {
-    const classes = ["CSE 12", "CSE 11", "MATH 20C", "ECON 1"];
+const ClassSearch = ({ selectedClass, setSelectedClass }) => {
+    const [classes, setClasses] = useState([]);
 
-    const [selectedClass, setSelectedClass] = useState(classes[0]);
+    const fetchClasses = async () => {
+        const res = await fetch("http://localhost:4000/api/courses");
+        const data = await res.json();
+        setClasses(data);
+    };
+
+    useEffect(() => {
+        fetchClasses();
+    }, []);
+
     const [query, setQuery] = useState("");
 
     const filteredClasses = useMemo(
         () =>
-            query === ""
-                ? classes
+            query.length < 2
+                ? []
                 : classes.filter((c) => {
-                    return c.toLowerCase().includes(query.toLowerCase());
+                    return c.includes(query);
                 }),
-        [query],
+        [query, classes],
     );
 
     return (
@@ -26,13 +35,19 @@ const ClassSearch = () => {
         <div>
             <link rel="stylesheet" href="class-search.css" />
 
-            <div>
+            <div className="combobox">
                 <Combobox value={selectedClass} onChange={setSelectedClass}>
-                    <Combobox.Input id='box' onChange={(event) => setQuery(event.target.value)} />
-                    <button id="button">update</button>
-                    <Combobox.Options id='options'>
+                    <Combobox.Input
+                        id="box"
+                        onChange={(event) => setQuery(event.target.value.toUpperCase())}
+                    />
+                    <Combobox.Options id="options">
                         {filteredClasses.length === 0 ? (
-                            <span>No results found</span>
+                            <span>
+                                {query.length < 2
+                                    ? "Enter at least 2 characters to search"
+                                    : "No results found"}
+                            </span>
                         ) : (
                             filteredClasses.map((c) => (
                                 <Combobox.Option

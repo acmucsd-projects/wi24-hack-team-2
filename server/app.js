@@ -7,6 +7,7 @@ const cors = require('cors');
 const scheduleRoutes = require("./routes/schedules");
 const userRoutes = require("./routes/users");
 const professorRoutes = require("./routes/professor");
+const courseRoutes = require("./routes/courses");
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(cors({
 app.use("/api/schedules", scheduleRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/professor", professorRoutes);
+app.use("/api/courses", courseRoutes);
 
 dotenv.config();
 
