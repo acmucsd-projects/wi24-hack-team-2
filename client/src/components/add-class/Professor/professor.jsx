@@ -4,13 +4,7 @@ import { useState, useEffect } from "react";
 //put css in a css file and import
 
 const Professor = () => {
-    // https://stackoverflow.com/questions/386281/how-to-implement-select-all-check-box-in-html
-    /*function toggle(source) {
-                  let checkboxes = document.getElementsByName('professor');
-                  for(var checkbox in checkboxes)
-                      checkbox.checked=source.checked;
-              }*/
-
+    
     const [profs, setProfs] = useState([
         {
             name: "Paul Cao",
@@ -64,7 +58,7 @@ const Professor = () => {
                         <label for={prof.name}>
                             {prof.name}
                             <p class="subheading">
-                                history course GPA: {prof.classGrade} || overall GPA:{" "}
+                                average course GPA: {prof.classGrade} || overall GPA:{" "}
                                 {prof.overallGrade}
                             </p>
                         </label>

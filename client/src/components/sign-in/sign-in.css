@@ -23,11 +23,9 @@
   transform: translate(-50%, -50%);
 }
 
-div {
+.sign-in-div {
   padding: 10px;
   text-align: center;
-
-  
 }
 
 h1 {

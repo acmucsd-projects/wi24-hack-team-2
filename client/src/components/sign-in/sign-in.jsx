@@ -12,22 +12,22 @@ export default function SignIn() {
             </head>
 
             <body id="signin">
-                <div>
+                <div className='sign-in-div'>
                     <h1>sign up</h1>
                 </div>
 
                 <div>
-                    <div>
-                        <input type="email" class="input-field" placeholder="email"/>
+                    <div className='sign-in-div'>
+                        <input type="email" className="input-field" placeholder="email"/>
                     </div>
 
-                    <div>
-                        <input type="password" class="input-field" placeholder="password"/>
+                    <div className='sign-in-div'>
+                        <input type="password" className="input-field" placeholder="password"/>
                     </div>
 
                     <div>
                         <Link to="/home">
-                            <input type="button" class="input-button" value="next"/>
+                            <input type="button" className="input-button" value="next"/>
                         </Link>
                     </div>
                 </div>

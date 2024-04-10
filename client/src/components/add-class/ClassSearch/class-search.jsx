@@ -28,8 +28,9 @@ const ClassSearch = () => {
 
             <div>
                 <Combobox value={selectedClass} onChange={setSelectedClass}>
-                    <Combobox.Input onChange={(event) => setQuery(event.target.value)} />
-                    <Combobox.Options>
+                    <Combobox.Input id='box' onChange={(event) => setQuery(event.target.value)} />
+                    <button id="button">update</button>
+                    <Combobox.Options id='options'>
                         {filteredClasses.length === 0 ? (
                             <span>No results found</span>
                         ) : (
@@ -47,7 +48,6 @@ const ClassSearch = () => {
                         )}
                     </Combobox.Options>
                 </Combobox>
-                <button>Add</button>
             </div>
         </div>
     );

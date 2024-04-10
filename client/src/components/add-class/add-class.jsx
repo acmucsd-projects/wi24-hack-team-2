@@ -27,6 +27,12 @@ export default function AddClass() {
                     <Professor />
                 </div>
 
+                <div>
+                    <Link to="/home">
+                        <input type="button" class="input-button" value="add class"/>
+                    </Link>
+                </div>
+
             </body>
         </main>
     );

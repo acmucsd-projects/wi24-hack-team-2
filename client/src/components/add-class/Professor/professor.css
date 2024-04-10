@@ -7,6 +7,7 @@
 .container {
     display: block;
     text-align: left;
+    margin-bottom: -30px;
 }
 
 input[type=checkbox] {
@@ -16,7 +17,7 @@ input[type=checkbox] {
 
 label {
     font-size: 30px;
-    padding: 20px;
+    margin: 20px;
     color: #1D2348;
 }
 
