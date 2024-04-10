@@ -41,13 +41,6 @@ export default function LogIn() {
 
     return (
         <main>
-            <head>
-                <style>
-                    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karla"></link>
-                </style>
-            </head>
-
-            <body>
                 <div>
                     <h1>log in</h1>
                 </div>
@@ -77,7 +70,6 @@ export default function LogIn() {
                 </div>
             
                 </div>
-            </body>
-        </main>
+            </main>
     );
 }

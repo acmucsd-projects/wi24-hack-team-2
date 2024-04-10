@@ -1,39 +1,28 @@
-import './add-class.css';
-import { Link } from 'react-router-dom'
-import ClassSearch from './ClassSearch/class-search';
-import Professor from './Professor/professor';
-
+import "./add-class.css";
+import { Link } from "react-router-dom";
+import ClassSearch from "./ClassSearch/class-search";
+import Professor from "./Professor/professor";
 
 export default function AddClass() {
     return (
-        <main>
-            <head>
-                <style>
-                    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karla"></link>
-                    <link rel="stylesheet" href="./add-class.css"></link>
-                </style>
-            </head>
+        <main id="addclass">
+            <h1>add class</h1>
 
-            <body id="addclass">
-                <h1>add class</h1>
+            <div>
+                <h2> name </h2>
+                <ClassSearch />
+            </div>
 
-                <div>
-                    <h2> name </h2>
-                    <ClassSearch />
-                </div>
+            <div>
+                <h2> professors </h2>
+                <Professor />
+            </div>
 
-                <div>
-                    <h2> professors </h2>
-                    <Professor />
-                </div>
-
-                <div>
-                    <Link to="/home">
-                        <input type="button" class="input-button" value="add class"/>
-                    </Link>
-                </div>
-
-            </body>
+            <div>
+                <Link to="/home">
+                    <input type="button" class="input-button" value="add class" />
+                </Link>
+            </div>
         </main>
     );
 }

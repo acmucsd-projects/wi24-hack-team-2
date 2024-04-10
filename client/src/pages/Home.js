@@ -20,14 +20,6 @@ const Home = () => {
   return (
     //put html code here
     <main>
-      <head>
-        <style>
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karla"></link>
-            <link rel="stylesheet" href='../components/home/home.css'></link>
-        </style>
-      </head>
-
-      <body>
         <div className="home">
           <div><h1>preferences</h1></div>
           <div><Classes /></div>
@@ -36,7 +28,6 @@ const Home = () => {
           <div><Switch /></div>
           <div><Schedule /></div>
         </div>
-      </body>
     </main>
   );
 };
