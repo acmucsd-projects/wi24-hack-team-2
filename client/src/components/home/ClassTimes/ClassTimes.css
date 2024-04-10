@@ -15,6 +15,14 @@
   .header3 {
     grid-column: 2 / span 1; /* Span 1 column starting from column 2 */
   }
+
+  .header {
+    margin-bottom: 10px;
+  }
+
+  .paragraph {
+    margin-bottom: 10px;
+  }
   
   .classTimes {
     padding: 5px;
@@ -22,3 +30,19 @@
     border-radius: 4px;
     font-size: 16px;
   }
+
+  table, th, td {
+    border-color: #B3BDBE;
+    border-style: solid;
+    font-size: 15px;
+  }
+  
+  td, th {
+    text-align: center;
+    padding: 5px;
+  }
+
+.ClickableTableCell {
+  border-color: none;
+  width: 100%;
+}
