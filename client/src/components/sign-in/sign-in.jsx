@@ -1,7 +1,6 @@
 import axios from 'axios'
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { UsernameContext } from '../../App';
 import './sign-in.css';
 
 
@@ -15,7 +14,6 @@ export default function SignIn() {
     });
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
-    const { setUsername } = useContext(UsernameContext);
     
     useEffect(() => {
         localStorage.clear(); // Clear localStorage on component mount
@@ -33,7 +31,7 @@ export default function SignIn() {
             const token = response.data.token;
             const extractedUsername = values.email.split('@')[0];
             
-            setUsername(extractedUsername);
+        
             localStorage.setItem('username', extractedUsername);
             setError(null);
             setSuccess('Sign up successful!')
