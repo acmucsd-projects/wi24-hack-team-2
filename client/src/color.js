@@ -2,7 +2,7 @@
  * @param {string} code
  */
 export function color(code) {
-  return `hsl(${cyrb53(code) % 360}, 70%, 80%)`;
+  return `hsl(${cyrb53(code) % 360}, 50%, 70%)`;
 }
 
 // https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript

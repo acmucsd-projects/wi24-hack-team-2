@@ -21,21 +21,21 @@ const ClassTimes = ({ states, setStates }) => {
         are not preferred
       </p>
       <div style={{ display: "flex", gap: "8px" }}>
-        <button
+        <button className="edit-button"
           onClick={() => {
             setStates(Array.from({ length: 30 }, () => [0, 0, 0, 0, 0]));
           }}
         >
           clear
         </button>
-        <button
+        <button className="edit-button"
           onClick={() => {
             setStates(Array.from({ length: 30 }, () => [1, 1, 1, 1, 1]));
           }}
         >
           blacklist all
         </button>
-        <button
+        <button className="edit-button"
           onClick={() => {
             setStates(Array.from({ length: 30 }, () => [2, 2, 2, 2, 2]));
           }}

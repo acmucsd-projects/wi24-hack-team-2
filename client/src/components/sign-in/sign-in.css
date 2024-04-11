@@ -37,6 +37,7 @@ h1 {
   border-right: none;
   border-bottom: -5px;
   border-color: #98AAAC;
+  background-color: #EEE9E6;
   /* width: 100%; */
 }
 
@@ -61,3 +62,4 @@ h1 {
 .input-button:hover {
   opacity: 70%;
 }
+
