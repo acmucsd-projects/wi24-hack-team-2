@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import "./Schedule.css";
 import { color } from "../../../color";
 //put css in a css file and import
@@ -19,87 +19,96 @@ const timeTo15MinBlock = (time) => {
 };
 
 const Schedule = ({ schedule }) => {
+  const dayKeys = ["M", "Tu", "W", "Th", "F", "Sa", "Su"];
+
+  const { days, extra } = useMemo(() => {
+    const days = [];
+    const extra = [];
+
+    if (!schedule) {
+      return { days, extra };
+    }
+
+    schedule.data.forEach((course, i) => {
+      course.meetings.forEach((meeting) => {
+        if (meeting.days.length > 0) {
+          meeting.days.forEach((day) => {
+            const idx = dayKeys.indexOf(day);
+            if (idx === -1) {
+              console.log("Extra day", day);
+            } else {
+              if (!days[idx]) {
+                days[idx] = [];
+              }
+              days[idx].push({
+                title: schedule.name[i],
+                type: meeting.type,
+                location: meeting.location,
+                prof: course.instructors.join(", "),
+                start: meeting.startTime,
+                startRow: timeTo15MinBlock(meeting.startTime),
+                end: meeting.endTime,
+                endRow: timeTo15MinBlock(meeting.endTime),
+              });
+            }
+          });
+        } else {
+          extra.push({
+            title: schedule.name[i],
+            type: meeting.type,
+            location: meeting.location,
+            prof: course.instructors.join(", "),
+            start: meeting.startTime,
+            end: meeting.endTime,
+            date: meeting.date,
+          });
+        }
+      });
+    });
+    return { days, extra };
+  }, [schedule]);
+
   if (!schedule) {
     return <div>No Schedule</div>;
   }
-
-  const dayKeys = ["M", "Tu", "W", "Th", "F", "Sa", "Su"];
-  let days = [];
-  let extra = [];
-
-  schedule.data.forEach((course, i) => {
-    course.meetings.forEach((meeting) => {
-      if (meeting.days.length > 0) {
-        meeting.days.forEach((day) => {
-          const idx = dayKeys.indexOf(day);
-          if (idx === -1) {
-            console.log("Extra day", day);
-          } else {
-            if (!days[idx]) {
-              days[idx] = [];
-            }
-            days[idx].push({
-              title: schedule.name[i],
-              type: meeting.type,
-              location: meeting.location,
-              prof: course.instructors.join(", "),
-              start: meeting.startTime,
-              startRow: timeTo15MinBlock(meeting.startTime),
-              end: meeting.endTime,
-              endRow: timeTo15MinBlock(meeting.endTime),
-            });
-          }
-        });
-      } else {
-        extra.push({
-          title: schedule.name[i],
-          type: meeting.type,
-          location: meeting.location,
-          prof: course.instructors.join(", "),
-          start: meeting.startTime,
-          end: meeting.endTime,
-          date: meeting.date,
-        });
-      }
-    });
-  });
-
-  console.log(extra);
 
   //put java script code here
   return (
     //put html code here
     <div className="schedule">
-      <div>
-        <h2>special meetings</h2>
-
-        <div
-          style={{ display: "flex", flexWrap: "wrap", maxWidth: "90vw", placeContent: "center" }}
-        >
-          {extra.map((event) => (
-            <div
-              class="event"
-              key={event.name + event.type}
-              style={{
-                backgroundColor: color(
-                  event.title
-                    .split(" ")
-                    .slice(0, event.title.split(" ").length - 1)
-                    .join(" "),
-                ),
-              }}
-            >
-              <p class="title">{event.title}</p>
-              <p class="time">
-                {event.type} || {event.location}
-              </p>
-              <p class="time">{event.date}</p>
-              <p class="time">
-                {event.start} - {event.end}
-              </p>
-            </div>
-          ))}
-        </div>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          maxWidth: "90vw",
+          placeContent: "center",
+        }}
+      >
+        {extra.map((event) => (
+          <div
+            class="event"
+            key={event.name + event.type + Math.random()}
+            style={{
+              padding: "16px",
+              backgroundColor: color(
+                event.title
+                  .split(" ")
+                  .slice(0, event.title.split(" ").length - 1)
+                  .join(" "),
+              ),
+            }}
+          >
+            <p class="title">{event.title}</p>
+            <p>{event.prof}</p>
+            <p>
+              {event.type} || {event.location}
+            </p>
+            <p>{event.date}</p>
+            <p>
+              {event.start} - {event.end}
+            </p>
+          </div>
+        ))}
       </div>
       <div class="calendar">
         <div class="timeline">
@@ -145,10 +154,11 @@ const Schedule = ({ schedule }) => {
                       }}
                     >
                       <p class="title">{event.title}</p>
-                      <p class="time">
+                      <p>{event.prof}</p>
+                      <p>
                         {event.type} || {event.location}
                       </p>
-                      <p class="time">
+                      <p>
                         {event.start} - {event.end}
                       </p>
                     </div>

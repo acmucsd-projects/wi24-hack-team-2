@@ -1,9 +1,8 @@
 .schedule {
     font-family: "Karla", sans-serif; /* Set font-family for the table */
     margin-bottom: 150px; /* Add margin to the bottom */
-    margin-left: -25%;
-    width: 150%;
     position: inline;
+    width: 90vw;
   }
 
   :root {
