@@ -176,13 +176,14 @@ const makeSchedule = async (courseList, blacklist, graylist, instrList) => {
                 return [];
             }
 
-            course.get("sections").forEach(section => {
-                section.get("instructors").forEach(instr => {
-                    if (instrList.includes(instr)) {
+            await Promise.all(Array.from(course.get("sections")).map(async section => {
+                await Promise.all(Array.from(section.get("instructors")).map(async instr => {
+                    const real = await Instructor.findById(instr);
+                    if (instrList.includes(real.name)) {
                         courseSections.push(section);
                     }
-                })
-            });
+                }));
+            }));
             sectionOptions.push(courseSections);
         }
     }
@@ -273,6 +274,14 @@ const makeSchedule = async (courseList, blacklist, graylist, instrList) => {
         nice_text.push(str);
     }
 
+    // for each schedule for each section
+    for (let i = 0; i < schedules.length; i++) {
+        for (let j = 0; j < schedules[i].length; j++) {
+            schedules[i][j] = schedules[i][j].toObject();
+            schedules[i][j].instructors = await Promise.all(schedules[i][j].instructors.map(async (instr) => (await Instructor.findById(instr)).name))
+        }
+    }
+
     const ret = [];
     for (let i = 0; i < nice_text.length; i++) {
         const schedule = {
@@ -323,12 +332,12 @@ const findProfs = async (courseCode) => {
             },
             course: {
                 short: {
-                    gpa: roundTwoPlaces(capes.get("courses").get(courseCode).get("shortTerm").get("avgGrade")),
-                    rcmnd: roundTwoPlaces(capes.get("courses").get(courseCode).get("shortTerm").get("rcmndInstr")),
+                    gpa: roundTwoPlaces(capes.get("courses").get(courseCode)?.get("shortTerm").get("avgGrade")),
+                    rcmnd: roundTwoPlaces(capes.get("courses").get(courseCode)?.get("shortTerm").get("rcmndInstr")),
                 },
                 long: {
-                    gpa: roundTwoPlaces(capes.get("courses").get(courseCode).get("longTerm").get("avgGrade")),
-                    rcmnd: roundTwoPlaces(capes.get("courses").get(courseCode).get("longTerm").get("rcmndInstr")),
+                    gpa: roundTwoPlaces(capes.get("courses").get(courseCode)?.get("longTerm").get("avgGrade")),
+                    rcmnd: roundTwoPlaces(capes.get("courses").get(courseCode)?.get("longTerm").get("rcmndInstr")),
                 }
             }
         });

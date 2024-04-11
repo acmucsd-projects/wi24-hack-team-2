@@ -1,3 +1,9 @@
+div:has(> .card) {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 8rem;
+    justify-content: center;
+}
 
 .card {
     padding-top: 10px;
@@ -16,7 +22,6 @@
 
 .card-body {
     display: inline-block;
-    background-color: #2D7A88;
     padding: 0px;
     margin: 0px;
 }
@@ -24,12 +29,10 @@
 .card-title {
     font-size: 25px;
     font-weight: bold;
-    background-color: #2D7A88;
 }
 
 .card-profs {
     font-size: 15px;
-    background-color: #2D7A88;
 }
 
 #button {
@@ -38,7 +41,6 @@
     padding-left: 20px;
     padding-right: 20px;
     font-size: 25px;
-    background-color: #2D7A88;
     color: #EEE9E6;
     border: none;
     margin-top: 10px;
@@ -55,7 +57,7 @@
     padding: 10px;
     font-size: 25px;
     margin-left: 75px;
-    background-color: #2D7A88;
+    background-color: inherit;
     color: #EEE9E6;
     border: none;
     cursor: pointer;

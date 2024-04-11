@@ -16,9 +16,9 @@ const Professor = ({ selectedClass, setSelectedProfs }) => {
 
         const json = await res.json();
 
-        setProfs(json);
-
-        console.log(json);
+        if (typeof json === "object" && typeof json.length === "number") {
+            setProfs(json);
+        }
     };
 
     useEffect(() => {
@@ -39,11 +39,11 @@ const Professor = ({ selectedClass, setSelectedProfs }) => {
     // very troll but too late
     useEffect(() => {
         if (all) {
-            setSelectedProfs([]);
+            setSelectedProfs(profs.map((p) => p.name));
         } else {
             setSelectedProfs(profs.filter((p) => p.selected).map((p) => p.name));
         }
-    }, [profs]);
+    }, [profs, all]);
 
     return (
         //put html code here
@@ -80,18 +80,18 @@ const Professor = ({ selectedClass, setSelectedProfs }) => {
                                     {prof.name}
                                     <p class="subheading">
                                         average course GPA:{" "}
-                                        {prof.course.short?.gpa ?? prof.course.long?.gpa} || overall
-                                        GPA: {prof.overall.short?.gpa ?? prof.course.long?.gpa}
+                                        {prof.course.short?.gpa ?? prof.course.long?.gpa ?? "?"} || overall
+                                        GPA: {prof.overall.short?.gpa ?? prof.course.long?.gpa ?? "?"}
                                     </p>
                                     <p class="subheading">
                                         average course rcmnd:{" "}
                                         {Math.round(
                                             prof.course.short?.rcmnd ?? prof.course.long?.rcmnd,
-                                        )}
-                                        % || overall course rcmnd:{" "}
+                                        ) || "?"}
+                                        % || overall rcmnd:{" "}
                                         {Math.round(
                                             prof.overall.short?.rcmnd ?? prof.course.long?.rcmnd,
-                                        )}
+                                        ) || "?"}
                                         %
                                     </p>
                                 </label>

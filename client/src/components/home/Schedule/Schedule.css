@@ -1,48 +1,136 @@
 .schedule {
     font-family: "Karla", sans-serif; /* Set font-family for the table */
-    margin-left: 150px; /* Add margin to the left */
-    margin-right: 150px; /* Add margin to the right */
     margin-bottom: 150px; /* Add margin to the bottom */
-    position: relative; /* Set position to relative */
+    position: inline;
+    width: 90vw;
+  }
+
+  :root {
+    --numDays: 5;
+    --numHours: 15;
+    --timeHeight: calc(60px / 4);
+    --calBgColor: #D9D9D9;
+    --eventBorderColor: none;
+    --eventColor1: #ffd6d1;
+    --eventColor2: #fafaa3;
+    --eventColor3: #e2f8ff;
+    --eventColor4: #d1ffe6;
   }
   
-  .schedule::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -1px;
-    width: 100%;
-    height: 1px;
-    background-color: #EEE9E6; /* Set background color for the line */
+  .calendar {
+    display: grid;
+    gap: 0px;
+    grid-template-columns: auto 1fr;
+    margin: 2px;
   }
   
-  .schedule table {
-    width: 100%;
-    border-collapse: collapse; /* Collapse borders */
+  .timeline {
+    display: grid;
+    grid-template-rows: repeat(calc(var(--numHours) * 8), calc(var(--timeHeight) * 4));
+  }
+
+  .time-marker {
+    margin: none;
+    font-size: 15px;
+    grid-row: span 2 / span 2;
   }
   
-  .schedule th, .schedule td {
-    border: 1px solid #ddd; /* Add borders to cells */
-    padding: 4px; /* Add padding to cells */
+  .days {
+    display: grid;
+    grid-column: 2;
+    gap: 0px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
   
-  .schedule th {
-    background-color: #f2f2f2; /* Light gray background for header */
+  .events {
+    display: grid;
+    grid-template-rows: repeat(calc(var(--numHours) * 8), var(--timeHeight));
+    border-radius: 5px;
+    background: var(--calBgColor);
+    padding: 0px;
   }
   
-  .schedule th, .schedule td {
-    text-align: center; /* Center align text */
+  .start-10 {
+    grid-row-start: calc(2 * 8);
   }
   
-  .schedule th:first-child, .schedule td:first-child {
-    border-left: none; /* Remove left border for first column */
+  .start-12 {
+    grid-row-start: calc(4 * 8);
   }
   
-  .schedule th:last-child, .schedule td:last-child {
-    border-right: none; /* Remove right border for last column */
+  .start-1 {
+    grid-row-start: calc(5 * 8);
   }
   
-  .schedule tr:last-child th, .schedule tr:last-child td {
-    border-bottom: none; /* Remove bottom border for last row */
+  .start-2 {
+    grid-row-start: calc(6 * 8);
   }
   
+  .end-12 {
+    grid-row-end: calc(4 * 8);
+  }
+  
+  .end-1 {
+    grid-row-end: calc(5 * 8);
+  }
+  
+  .end-3 {
+    grid-row-end: calc(7 * 8);
+  }
+  
+  .end-4 {
+    grid-row-end: calc(8 * 8);
+  }
+  
+  .end-5 {
+    grid-row-end: calc(9 * 8);
+  }
+    
+  .title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  
+  .event {
+    border: 1px solid var(--eventBorderColor);
+    border-radius: 5px;
+    padding: 5px;
+    margin: 0 0.5rem;
+    background: white;
+  }
+  
+  .space,
+  .date {
+    height: 50px;
+  }
+    
+  body {
+    font-family: "Karla", sans-serif;
+  }
+  
+  .corp-fi {
+    background: var(--eventColor1);
+  }
+  
+  .ent-law {
+    background: var(--eventColor2);
+  }
+  
+  .writing {
+    background: var(--eventColor3);
+  }
+  
+  .securities {
+    background: var(--eventColor4);
+  }
+  
+  .date {
+    display: flex;
+    gap: 0;
+  }
+  
+  .date-day {
+    display: inline;
+    font-size: 25px;
+    text-align: center;
+  }

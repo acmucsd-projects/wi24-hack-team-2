@@ -32,7 +32,7 @@ const createSchedule = async (req, res) => {
         const classes_list = await maker.makeSchedule(courseList, blacklist, graylist, instrList)
         scheduleList = await Schedule.create(classes_list)
         res.status(200).json(classes_list)
-    } 
+    }
 
     catch (error){
         res.status(400).json({error: error.message})
