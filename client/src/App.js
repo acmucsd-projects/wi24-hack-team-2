@@ -8,14 +8,17 @@ import LogIn from "./pages/LogIn";
 import { createContext, useState } from "react";
 
 export const SelectedClassesContext = createContext(null);
+export const UsernameContext = createContext(null);
 
 function App() {
   const [selectedClasses, setSelectedClasses] = useState([]);
+  const [username, setUsername] = useState("");
 
   return (
     <SelectedClassesContext.Provider
       value={{ selectedClasses, setSelectedClasses }}
     >
+      <UsernameContext.Provider value={{ username, setUsername }}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<SignIn />} />
@@ -24,6 +27,7 @@ function App() {
           <Route path="/addclass" element={<AddClass />} />
         </Routes>
       </BrowserRouter>
+      </UsernameContext.Provider>
     </SelectedClassesContext.Provider>
   );
 }
