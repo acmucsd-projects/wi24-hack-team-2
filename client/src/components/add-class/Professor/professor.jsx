@@ -39,11 +39,11 @@ const Professor = ({ selectedClass, setSelectedProfs }) => {
     // very troll but too late
     useEffect(() => {
         if (all) {
-            setSelectedProfs([]);
+            setSelectedProfs(profs.map((p) => p.name));
         } else {
             setSelectedProfs(profs.filter((p) => p.selected).map((p) => p.name));
         }
-    }, [profs]);
+    }, [profs, all]);
 
     return (
         //put html code here

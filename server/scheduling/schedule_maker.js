@@ -176,13 +176,14 @@ const makeSchedule = async (courseList, blacklist, graylist, instrList) => {
                 return [];
             }
 
-            course.get("sections").forEach(section => {
-                section.get("instructors").forEach(instr => {
-                    if (instrList.includes(instr)) {
+            await Promise.all(Array.from(course.get("sections")).map(async section => {
+                await Promise.all(Array.from(section.get("instructors")).map(async instr => {
+                    const real = await Instructor.findById(instr);
+                    if (instrList.includes(real.name)) {
                         courseSections.push(section);
                     }
-                })
-            });
+                }));
+            }));
             sectionOptions.push(courseSections);
         }
     }

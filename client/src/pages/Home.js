@@ -28,7 +28,7 @@ const Home = () => {
         courseList: selectedClasses.map((course) => course.code),
         blacklist: [],
         graylist: [],
-        instrList: [],
+        instrList: selectedClasses.map((course) => course.profs.flat()).flat(),
       }),
     });
 
