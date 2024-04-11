@@ -12,10 +12,10 @@
     --timeHeight: 60px;
     --calBgColor: #D9D9D9;
     --eventBorderColor: none;
-    --eventColor1: #ffd6d1;
-    --eventColor2: #fafaa3;
-    --eventColor3: #e2f8ff;
-    --eventColor4: #d1ffe6;
+    --eventColor1: #E7BBB8;
+    --eventColor2: #E9C39D;
+    --eventColor3: #B4C9CA;
+    --eventColor4: #CCB7C7;
   }
   
   .calendar {
