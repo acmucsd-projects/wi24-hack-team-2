@@ -1,6 +1,6 @@
 import axios from 'axios'
-import React, {useState} from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './sign-in.css';
 
 
@@ -15,6 +15,9 @@ export default function SignIn() {
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     
+    useEffect(() => {
+        localStorage.clear(); // Clear localStorage on component mount
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -24,12 +27,18 @@ export default function SignIn() {
                 email: values.email,
                 password: values.password,
             });
-            const token = response.data.token;
 
+            const token = response.data.token;
+            const extractedUsername = values.email.split('@')[0];
+            
+        
+            localStorage.setItem('username', extractedUsername);
             setError(null);
             setSuccess('Sign up successful!')
+
             console.log('User signed up successfully. Token:', token);
             console.log(response.data);
+
             navigate('/home');
             
         } catch (error) {

@@ -11,6 +11,7 @@ export const SelectedClassesContext = createContext(null);
 
 function App() {
   const [selectedClasses, setSelectedClasses] = useState([]);
+  const [username, setUsername] = useState("");
 
   return (
     <SelectedClassesContext.Provider

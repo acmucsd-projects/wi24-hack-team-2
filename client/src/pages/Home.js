@@ -13,6 +13,8 @@ import Update from "../components/home/Update/Update";
 import Switch from "../components/home/Switch/Switch";
 import Schedule from "../components/home/Schedule/Schedule";
 import { SelectedClassesContext } from "../App";
+import DisplayUser from '../components/home/DisplayUser/DisplayUser'
+
 // import Rating from '../components/home/Rating';
 
 const Home = () => {
@@ -47,9 +49,7 @@ const Home = () => {
     //put html code here
     <main>
       <div className="home">
-        <div>
-          <h1>preferences</h1>
-        </div>
+        <div><DisplayUser /></div>
         <div>
           <Classes />
         </div>
