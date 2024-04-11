@@ -16,7 +16,6 @@
 
 .card-body {
     display: inline-block;
-    background-color: #2D7A88;
     padding: 0px;
     margin: 0px;
 }
@@ -24,12 +23,10 @@
 .card-title {
     font-size: 25px;
     font-weight: bold;
-    background-color: #2D7A88;
 }
 
 .card-profs {
     font-size: 15px;
-    background-color: #2D7A88;
 }
 
 #button {
