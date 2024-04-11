@@ -67,8 +67,7 @@ const Schedule = ({ schedule }) => {
                 end: meeting.endTime,
                 endRow: convertToRowEnd(meeting.endTime, meeting.startTime),
               });
-              console.log("startrow", convertToRowStart(meeting.startTime));
-              console.log("endrow", convertToRowEnd(meeting.endTime, meeting.startTime));
+              
               
             }
           });
