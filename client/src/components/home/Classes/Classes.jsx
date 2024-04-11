@@ -3,6 +3,7 @@ import "./Classes.css";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { SelectedClassesContext } from "../../../App";
+import { color } from "../../../color";
 
 //put css in a css file and import
 const Classes = () => {
@@ -24,7 +25,7 @@ const Classes = () => {
 
       <div className="card-container">
         {selectedClasses.map((c) => (
-          <div className="card" id={c.code}>
+          <div className="card" id={c.code} style={{backgroundColor: color(c.code)}}>
             <div className="card-body">
               <h3 className="card-title">{c.code}</h3>
               <p className="card-profs">{c.profs.join(", ")}</p>

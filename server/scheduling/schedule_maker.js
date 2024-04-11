@@ -273,6 +273,14 @@ const makeSchedule = async (courseList, blacklist, graylist, instrList) => {
         nice_text.push(str);
     }
 
+    // for each schedule for each section
+    for (let i = 0; i < schedules.length; i++) {
+        for (let j = 0; j < schedules[i].length; j++) {
+            schedules[i][j] = schedules[i][j].toObject();
+            schedules[i][j].instructors = await Promise.all(schedules[i][j].instructors.map(async (instr) => (await Instructor.findById(instr)).name))
+        }
+    }
+
     const ret = [];
     for (let i = 0; i < nice_text.length; i++) {
         const schedule = {

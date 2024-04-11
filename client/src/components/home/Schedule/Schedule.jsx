@@ -1,12 +1,106 @@
 import React from "react";
 import "./Schedule.css";
+import { color } from "../../../color";
 //put css in a css file and import
-export const Schedule = ({ schedule }) => {
+
+const timeTo15MinBlock = (time) => {
+  // parse time as HH:MM pm/am
+  const d = new Date(Date.parse("01/01/2000 " + time + "m"));
+  // move so 8am is 0 hours
+  const hour = d.getHours();
+  const min = d.getMinutes();
+
+  // round to nearest 15 minutes
+  const roundedMin = Math.round(min / 15) * 15;
+
+  const block = hour * 8 + (roundedMin / 15) * 2;
+
+  return block - 8 * 8 + 2;
+};
+
+const Schedule = ({ schedule }) => {
+  if (!schedule) {
+    return <div>No Schedule</div>;
+  }
+
+  const dayKeys = ["M", "Tu", "W", "Th", "F", "Sa", "Su"];
+  let days = [];
+  let extra = [];
+
+  schedule.data.forEach((course, i) => {
+    course.meetings.forEach((meeting) => {
+      if (meeting.days.length > 0) {
+        meeting.days.forEach((day) => {
+          const idx = dayKeys.indexOf(day);
+          if (idx === -1) {
+            console.log("Extra day", day);
+          } else {
+            if (!days[idx]) {
+              days[idx] = [];
+            }
+            days[idx].push({
+              title: schedule.name[i],
+              type: meeting.type,
+              location: meeting.location,
+              prof: course.instructors.join(", "),
+              start: meeting.startTime,
+              startRow: timeTo15MinBlock(meeting.startTime),
+              end: meeting.endTime,
+              endRow: timeTo15MinBlock(meeting.endTime),
+            });
+          }
+        });
+      } else {
+        extra.push({
+          title: schedule.name[i],
+          type: meeting.type,
+          location: meeting.location,
+          prof: course.instructors.join(", "),
+          start: meeting.startTime,
+          end: meeting.endTime,
+          date: meeting.date,
+        });
+      }
+    });
+  });
+
+  console.log(extra);
+
   //put java script code here
   return (
     //put html code here
     <div className="schedule">
-      <samp>{JSON.stringify(schedule)}</samp>
+      <div>
+        <h2>special meetings</h2>
+
+        <div
+          style={{ display: "flex", flexWrap: "wrap", maxWidth: "90vw", placeContent: "center" }}
+        >
+          {extra.map((event) => (
+            <div
+              class="event"
+              key={event.name + event.type}
+              style={{
+                backgroundColor: color(
+                  event.title
+                    .split(" ")
+                    .slice(0, event.title.split(" ").length - 1)
+                    .join(" "),
+                ),
+              }}
+            >
+              <p class="title">{event.title}</p>
+              <p class="time">
+                {event.type} || {event.location}
+              </p>
+              <p class="time">{event.date}</p>
+              <p class="time">
+                {event.start} - {event.end}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
       <div class="calendar">
         <div class="timeline">
           <div class="spacer"></div>
@@ -28,70 +122,44 @@ export const Schedule = ({ schedule }) => {
           <div class="time-marker">11 PM</div>
         </div>
         <div class="days">
-          <div class="day mon">
-            <div class="date">
-              <p class="date-day">mon</p>
-            </div>
-            <div class="events">
-              <div class="event start-2 end-5 securities">
-                <p class="title">Securities Regulation</p>
-                <p class="time">2 PM - 5 PM</p>
+          {["mon", "tues", "wed", "thurs", "fri"].map((day, i) => (
+            <div class="day">
+              <div class="date">
+                <p class="date-day">{day}</p>
+              </div>
+              <div class="events">
+                {days[i]?.length > 0 &&
+                  days[i].map((event) => (
+                    <div
+                      class="event"
+                      key={event.name + event.type}
+                      style={{
+                        gridRowStart: event.startRow,
+                        gridRowEnd: event.endRow,
+                        backgroundColor: color(
+                          event.title
+                            .split(" ")
+                            .slice(0, event.title.split(" ").length - 1)
+                            .join(" "),
+                        ),
+                      }}
+                    >
+                      <p class="title">{event.title}</p>
+                      <p class="time">
+                        {event.type} || {event.location}
+                      </p>
+                      <p class="time">
+                        {event.start} - {event.end}
+                      </p>
+                    </div>
+                  ))}
               </div>
             </div>
-          </div>
-          <div class="day tues">
-            <div class="date">
-              <p class="date-day">tues</p>
-            </div>
-            <div class="events">
-              <div class="event start-10 end-12 corp-fi">
-                <p class="title">Corporate Finance</p>
-                <p class="time">10 AM - 12 PM</p>
-              </div>
-              <div class="event start-1 end-4 ent-law">
-                <p class="title">Entertainment Law</p>
-                <p class="time">1PM - 4PM</p>
-              </div>
-            </div>
-          </div>
-          <div class="day wed">
-            <div class="date">
-              <p class="date-day">wed</p>
-            </div>
-            <div class="events">
-              <div class="event start-12 end-1 writing">
-                <p class="title">Writing Seminar</p>
-                <p class="time">11 AM - 12 PM</p>
-              </div>
-              <div class="event start-2 end-5 securities">
-                <p class="title">Securities Regulation</p>
-                <p class="time">2 PM - 5 PM</p>
-              </div>
-            </div>
-          </div>
-          <div class="day thurs">
-            <div class="date">
-              <p class="date-day">thurs</p>
-            </div>
-            <div class="events">
-              <div class="event start-10 end-12 corp-fi">
-                <p class="title">Corporate Finance</p>
-                <p class="time">10 AM - 12 PM</p>
-              </div>
-              <div class="event start-1 end-4 ent-law">
-                <p class="title">Entertainment Law</p>
-                <p class="time">1PM - 4PM</p>
-              </div>
-            </div>
-          </div>
-          <div class="day fri">
-            <div class="date">
-              <p class="date-day">fri</p>
-            </div>
-            <div class="events"></div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
   );
 };
+
+export default Schedule;

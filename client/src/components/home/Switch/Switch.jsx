@@ -20,7 +20,7 @@ const Switch = ({ idx, setIdx, len }) => {
         id="switch2"
         name="Next"
         value="Next"
-        disabled={idx + 1 > len}
+        disabled={idx + 1 >= len}
         onClick={() => {
           setIdx(idx + 1);
         }}

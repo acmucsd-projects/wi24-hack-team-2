@@ -41,7 +41,6 @@ div:has(> .card) {
     padding-left: 20px;
     padding-right: 20px;
     font-size: 25px;
-    background-color: #2D7A88;
     color: #EEE9E6;
     border: none;
     margin-top: 10px;
@@ -58,7 +57,7 @@ div:has(> .card) {
     padding: 10px;
     font-size: 25px;
     margin-left: 75px;
-    background-color: #2D7A88;
+    background-color: inherit;
     color: #EEE9E6;
     border: none;
     cursor: pointer;

@@ -9,7 +9,7 @@
   :root {
     --numDays: 5;
     --numHours: 15;
-    --timeHeight: 60px;
+    --timeHeight: calc(60px / 4);
     --calBgColor: #D9D9D9;
     --eventBorderColor: none;
     --eventColor1: #ffd6d1;
@@ -27,12 +27,13 @@
   
   .timeline {
     display: grid;
-    grid-template-rows: repeat(var(--numHours), var(--timeHeight));
+    grid-template-rows: repeat(calc(var(--numHours) * 8), calc(var(--timeHeight) * 4));
   }
 
   .time-marker {
     margin: none;
     font-size: 15px;
+    grid-row: span 2 / span 2;
   }
   
   .days {
@@ -44,46 +45,46 @@
   
   .events {
     display: grid;
-    grid-template-rows: repeat(var(--numHours), var(--timeHeight));
+    grid-template-rows: repeat(calc(var(--numHours) * 8), var(--timeHeight));
     border-radius: 5px;
     background: var(--calBgColor);
     padding: 0px;
   }
   
   .start-10 {
-    grid-row-start: 2;
+    grid-row-start: calc(2 * 8);
   }
   
   .start-12 {
-    grid-row-start: 4;
+    grid-row-start: calc(4 * 8);
   }
   
   .start-1 {
-    grid-row-start: 5;
+    grid-row-start: calc(5 * 8);
   }
   
   .start-2 {
-    grid-row-start: 6;
+    grid-row-start: calc(6 * 8);
   }
   
   .end-12 {
-    grid-row-end: 4;
+    grid-row-end: calc(4 * 8);
   }
   
   .end-1 {
-    grid-row-end: 5;
+    grid-row-end: calc(5 * 8);
   }
   
   .end-3 {
-    grid-row-end: 7;
+    grid-row-end: calc(7 * 8);
   }
   
   .end-4 {
-    grid-row-end: 8;
+    grid-row-end: calc(8 * 8);
   }
   
   .end-5 {
-    grid-row-end: 9;
+    grid-row-end: calc(9 * 8);
   }
     
   .title {
