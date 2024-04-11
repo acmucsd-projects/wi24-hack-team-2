@@ -3,22 +3,39 @@ import "./Schedule.css";
 import { color } from "../../../color";
 //put css in a css file and import
 
-const timeTo15MinBlock = (time) => {
-  // parse time as HH:MM pm/am
-  const d = new Date(Date.parse("01/01/2000 " + time + "m"));
-  // move so 8am is 0 hours
-  const hour = d.getHours();
-  const min = d.getMinutes();
-
-  // round to nearest 15 minutes
-  const roundedMin = Math.round(min / 15) * 15;
-
-  const block = hour * 8 + (roundedMin / 15) * 2;
-
-  return block - 8 * 8 + 2;
+const convertToMinSince8 = (time12h) =>{
+  let [time, period] = time12h.split(/(?=[ap])/i); // Split before 'a' or 'p'
+  let [hour, minutes] = time.split(':').map(Number); // Extract hour and minutes as numbers
+  
+  if (period.toLowerCase() === 'p' && hour !== 12) {
+      hour += 12; // Add 12 to hour if PM (except for 12 PM)
+  } else if (period.toLowerCase() === 'a' && hour === 12) {
+      hour = 0; // Convert 12 AM to 0 hour
+  }
+  
+  const hourSince8 = hour-8;
+  let total_min=hourSince8 * 60 + minutes;
+  if(total_min==0){
+    total_min=1;
+  }
+  return total_min;
+};
+const convertToRowStart = (time12h) => {
+  const total_min=convertToMinSince8(time12h);
+  return Math.floor( total_min / 7.4 );
 };
 
+const convertToRowEnd = (time12h, startTime) => {
+  const startRow= convertToRowStart(startTime);
+  const total_min=convertToMinSince8(time12h);
+  
+  //setting min length of time block based on row start
+  return Math.max(Math.ceil(startRow + 7.4), Math.floor( total_min / 7.4 ));
+};
+
+
 const Schedule = ({ schedule }) => {
+  console.log(schedule);
   const dayKeys = ["M", "Tu", "W", "Th", "F", "Sa", "Su"];
 
   const { days, extra } = useMemo(() => {
@@ -46,10 +63,13 @@ const Schedule = ({ schedule }) => {
                 location: meeting.location,
                 prof: course.instructors.join(", "),
                 start: meeting.startTime,
-                startRow: timeTo15MinBlock(meeting.startTime),
+                startRow: convertToRowStart(meeting.startTime),
                 end: meeting.endTime,
-                endRow: timeTo15MinBlock(meeting.endTime),
+                endRow: convertToRowEnd(meeting.endTime, meeting.startTime),
               });
+              console.log("startrow", convertToRowStart(meeting.startTime));
+              console.log("endrow", convertToRowEnd(meeting.endTime, meeting.startTime));
+              
             }
           });
         } else {
@@ -80,7 +100,7 @@ const Schedule = ({ schedule }) => {
         style={{
           display: "flex",
           flexWrap: "wrap",
-          maxWidth: "90vw",
+          maxWidth: "80vw",
           placeContent: "center",
         }}
       >
