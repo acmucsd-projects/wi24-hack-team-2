@@ -80,18 +80,18 @@ const Professor = ({ selectedClass, setSelectedProfs }) => {
                                     {prof.name}
                                     <p class="subheading">
                                         average course GPA:{" "}
-                                        {prof.course.short?.gpa ?? prof.course.long?.gpa} || overall
-                                        GPA: {prof.overall.short?.gpa ?? prof.course.long?.gpa}
+                                        {prof.course.short?.gpa ?? prof.course.long?.gpa ?? "?"} || overall
+                                        GPA: {prof.overall.short?.gpa ?? prof.course.long?.gpa ?? "?"}
                                     </p>
                                     <p class="subheading">
                                         average course rcmnd:{" "}
                                         {Math.round(
                                             prof.course.short?.rcmnd ?? prof.course.long?.rcmnd,
-                                        )}
-                                        % || overall course rcmnd:{" "}
+                                        ) || "?"}
+                                        % || overall rcmnd:{" "}
                                         {Math.round(
                                             prof.overall.short?.rcmnd ?? prof.course.long?.rcmnd,
-                                        )}
+                                        ) || "?"}
                                         %
                                     </p>
                                 </label>

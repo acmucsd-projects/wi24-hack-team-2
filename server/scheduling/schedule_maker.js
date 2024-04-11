@@ -323,12 +323,12 @@ const findProfs = async (courseCode) => {
             },
             course: {
                 short: {
-                    gpa: roundTwoPlaces(capes.get("courses").get(courseCode).get("shortTerm").get("avgGrade")),
-                    rcmnd: roundTwoPlaces(capes.get("courses").get(courseCode).get("shortTerm").get("rcmndInstr")),
+                    gpa: roundTwoPlaces(capes.get("courses").get(courseCode)?.get("shortTerm").get("avgGrade")),
+                    rcmnd: roundTwoPlaces(capes.get("courses").get(courseCode)?.get("shortTerm").get("rcmndInstr")),
                 },
                 long: {
-                    gpa: roundTwoPlaces(capes.get("courses").get(courseCode).get("longTerm").get("avgGrade")),
-                    rcmnd: roundTwoPlaces(capes.get("courses").get(courseCode).get("longTerm").get("rcmndInstr")),
+                    gpa: roundTwoPlaces(capes.get("courses").get(courseCode)?.get("longTerm").get("avgGrade")),
+                    rcmnd: roundTwoPlaces(capes.get("courses").get(courseCode)?.get("longTerm").get("rcmndInstr")),
                 }
             }
         });

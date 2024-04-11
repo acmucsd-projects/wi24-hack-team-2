@@ -17,6 +17,15 @@
   text-align: right;
 }
 
+.switch input[type="button"]:disabled {
+  background-color: #B0B0B0 !important;
+  cursor: not-allowed !important;
+}
+
+.switch input[type="button"]:disabled:hover {
+  opacity: 100% !important;
+}
+
 .switch input[type="button"]:last-child {
   padding: 10px 20px;
   width: 120px; /* Set a fixed width for the buttons */

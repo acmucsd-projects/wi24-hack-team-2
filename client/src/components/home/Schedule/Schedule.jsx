@@ -1,12 +1,13 @@
 import React from 'react';
 import './Schedule.css';
 //put css in a css file and import
-const Schedule = () => {
+const Schedule = ({schedule}) => {
 
     //put java script code here
   return (
     //put html code here
     <div className="schedule">
+      <samp>{JSON.stringify(schedule)}</samp>
       <table border = "5" cellspacing = "5" align = "center"> 
         <tr>
           <th align="center" height="50" width="100">Time</th>

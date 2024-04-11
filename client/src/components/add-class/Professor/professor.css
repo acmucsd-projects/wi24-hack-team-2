@@ -28,3 +28,10 @@ label {
     color: #2d7a88;
     margin-left: 33px;
 }
+
+.random-text {
+    font-size: 20px;
+    text-align: left;
+    text-wrap: nowrap;
+    color: #2d7a88;
+}

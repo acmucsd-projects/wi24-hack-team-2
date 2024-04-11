@@ -9,7 +9,7 @@ export default function AddClass() {
     const [selectedClass, setSelectedClass] = useState(null);
     const [selectedProfs, setSelectedProfs] = useState([]);
 
-    const { selectedClasses, setSelectedClasses } = useContext(
+    const { setSelectedClasses } = useContext(
         SelectedClassesContext,
     );
 
@@ -21,7 +21,7 @@ export default function AddClass() {
         }
 
         setSelectedClasses((prev) => [
-            ...prev,
+            ...prev.filter(x => x.code !== selectedClass),
             {
                 code: selectedClass,
                 profs: selectedProfs,
@@ -32,6 +32,10 @@ export default function AddClass() {
     return (
         <main id="addclass">
             <h1>add class</h1>
+
+            <Link to="/home" className="random-text">
+                back
+            </Link>
 
             <div>
                 <h2> name </h2>
