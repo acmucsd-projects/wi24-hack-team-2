@@ -2,13 +2,13 @@
     font-family: "Karla", sans-serif; /* Set font-family for the table */
     margin-bottom: 150px; /* Add margin to the bottom */
     position: inline;
-    width: 90vw;
+    width: 80vw;
   }
 
   :root {
     --numDays: 5;
     --numHours: 15;
-    --timeHeight: calc(60px / 4);
+    --timeHeight: calc(50px / 4);
     --calBgColor: #D9D9D9;
     --eventBorderColor: none;
     --eventColor1: #ffd6d1;
@@ -26,7 +26,7 @@
   
   .timeline {
     display: grid;
-    grid-template-rows: repeat(calc(var(--numHours) * 8), calc(var(--timeHeight) * 4));
+    grid-template-rows: repeat(calc(var(--numHours) * 8), calc(var(--timeHeight) * 3.96));
   }
 
   .time-marker {
@@ -40,6 +40,7 @@
     grid-column: 2;
     gap: 0px;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    font-size: 14px;
   }
   
   .events {
@@ -47,11 +48,11 @@
     grid-template-rows: repeat(calc(var(--numHours) * 8), var(--timeHeight));
     border-radius: 5px;
     background: var(--calBgColor);
-    padding: 0px;
+    padding: 1px;
   }
   
   .start-10 {
-    grid-row-start: calc(2 * 8);
+    grid-row-start: calc(4 * 8);
   }
   
   .start-12 {
