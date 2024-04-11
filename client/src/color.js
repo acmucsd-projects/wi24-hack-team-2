@@ -5,8 +5,6 @@ export function color(code) {
   return `hsl(${cyrb53(code) % 360}, 70%, 80%)`;
 }
 
-// https://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
-
 // https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript
 const cyrb53 = (str, seed = 0) => {
   let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;

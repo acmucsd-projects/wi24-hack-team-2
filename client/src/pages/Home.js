@@ -20,20 +20,23 @@ const Home = () => {
   const [schedules, setSchedules] = useState([]);
   const [idx, setIdx] = useState(0);
 
+  const [pickerStates, setPickerStates] = useState(
+    Array.from({ length: 30 }, () => [0, 0, 0, 0, 0]),
+  );
+
   const fetchSchedules = async () => {
     const res = await fetch("http://localhost:4000/api/schedules", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         courseList: selectedClasses.map((course) => course.code),
-        blacklist: [],
-        graylist: [],
+        blacklist: getList(pickerStates, 1),
+        graylist: getList(pickerStates, 2),
         instrList: selectedClasses.map((course) => course.profs.flat()).flat(),
       }),
     });
 
     const data = await res.json();
-    console.log(data);
     if (typeof data.length === "number") {
       setSchedules(data);
     }
@@ -51,7 +54,7 @@ const Home = () => {
           <Classes />
         </div>
         <div>
-          <ClassTimes />
+          <ClassTimes states={pickerStates} setStates={setPickerStates} />
         </div>
         <div>
           <Update
@@ -70,4 +73,55 @@ const Home = () => {
     </main>
   );
 };
+
+const getList = (states, val) => {
+  const blacklist = [];
+
+  // for each day
+  for (let i = 0; i < 5; i++) {
+    // find consecutive ranges of value 1
+    let start = -1;
+    let end = -1;
+
+    let ranges = [];
+
+    for (let j = 0; j < 30; j++) {
+      if (states[j][i] === val) {
+        if (start === -1) {
+          start = j;
+        }
+        end = j + 1;
+      } else {
+        if (start !== -1) {
+          ranges.push([start, end]);
+          start = -1;
+          end = -1;
+        }
+      }
+    }
+
+    if (start !== -1) {
+      ranges.push([start, end]);
+    }
+
+    // add ranges to blacklist
+    ranges.forEach((range) => {
+      blacklist.push(
+        `${dayKeys[i]} ${idxToTime(range[0])} ${idxToTime(range[1])}`,
+      );
+    });
+  }
+
+  return blacklist;
+};
+
+const idxToTime = (idx) => {
+  // 8am to 11pm
+  const hour = Math.floor(idx / 2) + 8;
+  const min = (idx % 2) * 30;
+  return `${hour % 12 === 0 ? 12 : hour % 12}:${min === 0 ? "00" : "30"}${hour < 12 ? "a" : "p"}`;
+};
+
+const dayKeys = ["M", "Tu", "W", "Th", "F"];
+
 export default Home;

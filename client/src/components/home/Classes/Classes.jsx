@@ -11,8 +11,6 @@ const Classes = () => {
     SelectedClassesContext,
   );
 
-  console.log(selectedClasses);
-
   const removeCourse = (code) => {
     setSelectedClasses(selectedClasses.filter((c) => c.code !== code));
   };
